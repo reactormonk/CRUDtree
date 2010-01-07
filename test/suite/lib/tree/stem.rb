@@ -8,7 +8,7 @@ BareTest.suite "CRUDtree" do
         
         suite "paths" do
 
-          assert "deafults to class_name"
+          assert "defaults to class_name"
 
           assert "raises if none is given"
 
