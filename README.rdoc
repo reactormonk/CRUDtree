@@ -1,0 +1,12 @@
+= CRUDtree
+
+== Summary
+
+A resource helper mainly for usher, but may be adapted for other routers as
+well.
+
+== See
+
+Usher:: http://github.com/joshbuddy/usher
+IRC::   #rango@irc.freenode.net
+Baretest:: http://github.com/apeiros/baretest
