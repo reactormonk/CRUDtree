@@ -16,20 +16,21 @@ BareTest.suite "CRUDtree" do
 
         suite "Leaf" do
 
-          setup :leaf, "member Leaf" do
+          setup :setup do
             @stem = OpenStruct.new(identifier: :id)
-            @leaf = Leaf.new(type: :member, rest: :get, call: :show, path: "show")
-            CRUDtree::Interface::Usher.expects(:compile_path).with("/:id", @stem, @leaf)
-            CRUDtree::Interface::Usher.expects(:compile_path).with("/foo/:id", @stem, @leaf)
             @pre_paths = ["", "/foo"]
           end
 
+          setup :leaf, "member Leaf" do
+            @leaf = Leaf.new(type: :member, rest: :get, call: :show, path: "show")
+            CRUDtree::Interface::Usher.expects(:compile_path).with("/:id", @stem, @leaf)
+            CRUDtree::Interface::Usher.expects(:compile_path).with("/foo/:id", @stem, @leaf)
+          end
+
           setup :leaf, "collection Leaf" do
-            @stem = OpenStruct.new(identifier: :id)
             @leaf = Leaf.new(type: :collection, rest: :get, call: :index, path: "index")
             CRUDtree::Interface::Usher.expects(:compile_path).with("", @stem, @leaf)
             CRUDtree::Interface::Usher.expects(:compile_path).with("/foo", @stem, @leaf)
-            @pre_paths = ["", "/foo"]
           end
 
           assert "compilation with a :leaf" do
