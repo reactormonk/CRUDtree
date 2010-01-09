@@ -11,6 +11,7 @@ module CRUDtree
     # or
     # /join/:date/:foo/:whatever
     # the interface will handle those parameters.
+    # Defaults to call.to_s
     #
     # :rest
     # which REST method should match this route. Defaults to nil, aka all.
@@ -20,9 +21,13 @@ module CRUDtree
     def initialize(params)
       @type = params[:type] if [:member, :collection].include? params[:type]
       raise ArgumentError, "Invalid type: #{params[:type]}" unless @type
-      @path = params[:path] or raise ArgumentError, "No path given."
-      @rest = params[:rest]
+
       @call = params[:call] or raise ArgumentError, "No call given."
+
+      @path = params[:path] || @call.to_s
+      raise ArgumentError, "No path given." unless @path
+
+      @rest = params[:rest]
     end
 
     attr_reader :type, :path, :rest, :call
