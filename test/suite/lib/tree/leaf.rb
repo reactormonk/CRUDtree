@@ -6,7 +6,7 @@ BareTest.suite "CRUDtree" do
 
       suite "initialize" do
 
-        assert ":type should not accept :member or :collection" do
+        assert ":type should only accept :member or :collection" do
           raises(ArgumentError) {CRUDtree::Leaf.new({type: :foo, call: :foo, path: "/foo"})}
         end
 
