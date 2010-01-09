@@ -70,7 +70,7 @@ BareTest.suite "CRUDtree" do
 
 #       end
 
-#       assert "resource"
+#       assert "stem"
 
     end
 

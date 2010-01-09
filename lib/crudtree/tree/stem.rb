@@ -56,7 +56,7 @@ module CRUDtree
       leaf(params.merge({type: :collection}))
     end
 
-    def resource(params, &block)
+    def stem(params, &block)
       @leafs << Stem.new(params, &block)
     end
   end

@@ -1,9 +1,7 @@
 module CRUDtree
   class Trunk
 
-    # klass may be needed for the compiler. We never know :-).
-    def initialize(klass)
-      @klass = klass
+    def initialize
       @stems = []
     end
 
