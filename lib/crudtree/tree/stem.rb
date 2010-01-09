@@ -2,7 +2,7 @@ module CRUDtree
   class Stem
     # The params Hash takes the following keys:
     #
-    # :class_name
+    # :klass
     # The object where to send the method that is returned by the router.
     # Mostly a class, therefore it's called 'class_name'. Defaults to nil,
     # but the interface may complain. You have been warned ;).
@@ -24,14 +24,14 @@ module CRUDtree
     # the first one is being taken.
     #
     def initialize(params, &block)
-      @class_name = params[:class_name]
+      @class = params[:klass]
       @identifier = params[:identifier] || :id
       @default_collection = params[:default_collection] || :index
       @default_member = params[:default_member] || :show
       @paths = if params[:paths]
                  [params[:paths]].flatten
-               elsif params[:class_name]
-                 ["/" + params[:class_name].to_s.downcase] 
+               elsif params[:klass]
+                 ["/" + params[:klass].to_s.downcase.split("::").last] 
                else
                 raise ArgumentError, "No paths given"
                end
@@ -39,7 +39,7 @@ module CRUDtree
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
-    attr_reader :class_name, :identifier, :default_collection, :default_member, :paths
+    attr_reader :klass_name, :identifier, :default_collection, :default_member, :paths
 
     # Creates a new Leaf and attaches it to this Stem.
     def leaf(params)

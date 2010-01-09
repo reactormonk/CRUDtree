@@ -8,8 +8,8 @@ BareTest.suite "CRUDtree" do
         
         suite "paths" do
 
-          assert "defaults to class_name" do
-            Stem.new(class_name: "FooBar"){:foo}.paths.first == "/foobar"
+          assert "defaults to the name of the class" do
+            Stem.new(klass: Stem){:foo}.paths.first == "/stem"
           end
 
           assert "raises if no path is given" do
