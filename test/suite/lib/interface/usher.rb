@@ -2,7 +2,7 @@ require 'crudtree/interface/usher'
 require 'ostruct'
 
 module CRUDtree::Interface::Usher
-  public :compile_leaf
+  public :compile_leaf, :compile_stem
   extend self
 end
 
@@ -16,7 +16,7 @@ BareTest.suite "CRUDtree" do
 
         suite "Leaf" do
 
-          setup :setup do
+          setup do
             @stem = OpenStruct.new(identifier: :id)
             @pre_paths = ["", "/foo"]
           end
@@ -54,7 +54,20 @@ BareTest.suite "CRUDtree" do
 
         end
 
-      suite "#compile_stem"
+      end
+
+      suite "#compile_stem" do
+
+        setup do
+          @leaf = Object.new
+          @pre_paths = ["", "/baz"]
+          @stem = OpenStruct.new(paths: ["foo", "bar"], leafs: [@leaf])
+          CRUDtree::Interface::Usher.expects(:compile_leaf).with(["/foo", "/bar", "/baz/foo", "/baz/bar"], @stem, @leaf).returns(true)
+        end
+
+        assert "compilation" do
+          CRUDtree::Interface::Usher.compile_stem(@pre_paths, @stem)
+        end
 
       end
 

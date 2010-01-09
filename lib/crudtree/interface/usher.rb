@@ -1,7 +1,6 @@
 module CRUDtree
   module Interface
     module Usher
-
       # Integration part
       
       def initialize(params = {}, &block)
@@ -38,6 +37,7 @@ module CRUDtree
           compile_stem(pre_paths, leaf)
         end
       end
+
     end
   end
 end
