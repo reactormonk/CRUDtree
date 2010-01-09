@@ -8,23 +8,69 @@ BareTest.suite "CRUDtree" do
         
         suite "paths" do
 
-          assert "defaults to class_name"
+          assert "defaults to class_name" do
+            Stem.new(class_name: "FooBar"){:foo}.paths.first == "/foobar"
+          end
 
-          assert "raises if none is given"
+          assert "raises if no path is given" do
+            raises(ArgumentError) {Stem.new(foo: :bar){:foo}}
+          end
+
+          suite "path sanitizing" do
+
+            setup :input, "no Array" do
+              @paths = "/foo"
+              @result = ["/foo"]
+            end
+
+            setup :input, "an Array" do
+              @paths = ["/foo", "/bar"]
+              @result = ["/foo", "/bar"]
+            end
+
+            assert ":input is always a flattened Array" do
+              Stem.new(paths: @paths){:foo}.paths == @result
+            end
+
+          end
 
         end
-        
-        assert "&block"
 
+        assert "raises if no block is given" do
+          raises(ArgumentError) {Stem.new(foo: :bar)}
+        end
+        
       end
 
-      assert "leaf"
+#       suite "extended leafs" do
 
-      assert "member"
+#         setup :method, "#member" do
+#           @method = :member
+#         end
 
-      assert "collection"
+#         setup :method, "#collection" do
+#           @method = :collection
+#         end
 
-      assert "resource"
+#         setup :stem, "stem" do
+#           @stem = Stem.allocate
+#           @params = {foo: :bar}
+#           @result = @params.merge({type: @method})
+#           mock(@stem).leaf(@result)
+#         end
+
+#         assert ":method" do
+#           case @method
+#           when :member
+#             @stem.member @params
+#           when :collection
+#             @stem.collection @params
+#           end
+#         end
+
+#       end
+
+#       assert "resource"
 
     end
 

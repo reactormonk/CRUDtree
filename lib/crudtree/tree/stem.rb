@@ -23,15 +23,20 @@ module CRUDtree
     # You may specify mutiple paths which generate the route. When generating,
     # the first one is being taken.
     #
-    def intialize(params, &block)
-      @class_name = params[:class_name] || nil
+    def initialize(params, &block)
+      @class_name = params[:class_name]
       @identifier = params[:identifier] || :id
       @default_collection = params[:default_collection] || :index
       @default_member = params[:default_member] || :show
-      @paths = params[:paths] || ["/" + params[:class_name].to_s.downcase]
-      raise ArgumentError, "No paths given" if @paths.empty?
+      @paths = if params[:paths]
+                 [params[:paths]].flatten
+               elsif params[:class_name]
+                 ["/" + params[:class_name].to_s.downcase] 
+               else
+                raise ArgumentError, "No paths given"
+               end
       @leafs = []
-      instance_eval(&block)
+      block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
     attr_reader :class_name, :identifier, :default_collection, :default_member, :paths
