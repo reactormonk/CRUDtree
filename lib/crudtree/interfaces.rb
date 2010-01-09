@@ -4,12 +4,12 @@ module CRUDtree
   module Interface
     InterfaceRegistry = {}
 
-    def self.register(name, block)
-      InterfaceRegistry[name.to_sym] = block
+    def self.register(name, mod)
+      InterfaceRegistry[name.to_sym] = mod
     end
 
-    def self.for(router)
-      InterfaceRegistry[name.to_sym]
+    def self.for(name)
+      InterfaceRegistry[name.to_sym].attach
     end
   end
 end
