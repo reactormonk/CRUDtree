@@ -9,6 +9,10 @@ module CRUDtree
         super(nil, params, &block)
       end
 
+      def trunk_params
+        @trunk.params
+      end
+
       # Logic part
 
       def stem(params, &block)
