@@ -22,20 +22,20 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a simple leaf" do
             @pre_path = ""
-            @leaf = Leaf.new(type: :member, call: :foo)
+            @leaf = Leaf.new(type: :member, call: :foo, name: :foo)
             @stem = OpenStruct.new(klass: TestObj)
             @path = "/foo"
-            @params = {conditions: {}}
+            @params = {name: :foo, conditions: {}}
             @send = [:foo]
             @trunk_params = {}
           end
 
           setup :leaf, "a more complex leaf" do
             @pre_path = "/bar"
-            @leaf = Leaf.new(type: :member, call: :foo)
+            @leaf = Leaf.new(type: :member, call: :foo, name: :foo)
             @stem = OpenStruct.new(klass: TestObj)
             @path = "/bar/foo"
-            @params = {conditions: {}}
+            @params = {name: :foo, conditions: {}}
             @send = [:dispatcher, :foo]
             @trunk_params = {rango: true}
           end

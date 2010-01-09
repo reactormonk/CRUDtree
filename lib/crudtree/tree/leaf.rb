@@ -18,6 +18,10 @@ module CRUDtree
     #
     # :call
     # The method to be called if this route is matched. Required.
+    #
+    # :name
+    # The name of this route, used for generating. Symbol.
+    # No defaults, none will be added, as this is job of a resource snippet :)
     def initialize(params)
       @type = params[:type] if [:member, :collection].include? params[:type]
       raise ArgumentError, "Invalid type: #{params[:type]}" unless @type
@@ -28,8 +32,10 @@ module CRUDtree
       raise ArgumentError, "No path given." unless @path
 
       @rest = params[:rest]
+
+      @name = params[:name] or raise ArgumentError, "No name given."
     end
 
-    attr_reader :type, :path, :rest, :call
+    attr_reader :type, :path, :rest, :call, :name
   end
 end

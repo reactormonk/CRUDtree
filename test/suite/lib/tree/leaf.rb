@@ -15,7 +15,7 @@ BareTest.suite "CRUDtree" do
         end
 
         assert ":path should default to :call" do
-          CRUDtree::Leaf.new({type: :member, call: :foo}).path == "foo"
+          CRUDtree::Leaf.new({type: :member, call: :foo, name: :foo}).path == "foo"
         end
 
       end
