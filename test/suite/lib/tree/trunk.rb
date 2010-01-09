@@ -9,8 +9,6 @@ BareTest.suite "CRUDtree" do
         trunk.klass == object && trunk.stems == []
       end
 
-      assert "add_stem"
-
     end
 
   end

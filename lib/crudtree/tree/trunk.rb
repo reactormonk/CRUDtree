@@ -11,8 +11,7 @@ module CRUDtree
     attr_accessor :compiler
 
     def add_stem(params, &block)
-      @stems << stem = Stem.new(params, &block)
-      compiler.call(@klass, stem)
+      @stems << Stem.new(params, &block)
     end
   end
 end
