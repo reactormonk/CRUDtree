@@ -42,18 +42,18 @@ module CRUDtree
     attr_reader :klass_name, :identifier, :default_collection, :default_member, :paths
 
     # Creates a new Leaf and attaches it to this Stem.
-    def leaf(params)
+    def branch(params)
       @leafs << Leaf.new(params)
     end
 
     # Creates a new leaf with type member. See Leaf.
     def member(params)
-      leaf(params.merge({type: :member}))
+      branch(params.merge({type: :member}))
     end
 
     # Creates a new leaf with type collection. See Leaf.
     def collection(params)
-      leaf(params.merge({type: :collection}))
+      branch(params.merge({type: :collection}))
     end
 
     def stem(params, &block)

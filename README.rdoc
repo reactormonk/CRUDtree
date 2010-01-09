@@ -14,8 +14,8 @@ Baretest:: http://github.com/apeiros/baretest
 == Terminology
 
 Trunk:: The main body, only one per Usher instance as well.
-Stem:: May be attached to the Trunk or to other Stem as Leafs.
-Leaf:: A route endpoint (if it's a Leaf) or a nested resource (if it's a Stem)
+Stem:: You attach other Stems or Leafs as branches here.
+Leaf:: A route endpoint.
 
 == Usage
 

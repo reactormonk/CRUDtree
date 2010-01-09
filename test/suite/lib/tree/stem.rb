@@ -56,7 +56,7 @@ BareTest.suite "CRUDtree" do
           @stem = Stem.allocate
           @params = {foo: :bar}
           @result = @params.merge({type: @method})
-          @stem.expects(:leaf).with(@result)
+          @stem.expects(:branch).with(@result)
         end
 
         assert ":method" do
