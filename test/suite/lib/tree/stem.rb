@@ -71,8 +71,6 @@ BareTest.suite "CRUDtree" do
 
       end
 
-      assert "stem"
-
     end
 
   end
