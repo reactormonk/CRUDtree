@@ -42,35 +42,36 @@ BareTest.suite "CRUDtree" do
         
       end
 
-#       suite "extended leafs" do
+      suite "extended leafs" do
 
-#         setup :method, "#member" do
-#           @method = :member
-#         end
+        setup :method, "#member" do
+          @method = :member
+        end
 
-#         setup :method, "#collection" do
-#           @method = :collection
-#         end
+        setup :method, "#collection" do
+          @method = :collection
+        end
 
-#         setup :stem, "stem" do
-#           @stem = Stem.allocate
-#           @params = {foo: :bar}
-#           @result = @params.merge({type: @method})
-#           mock(@stem).leaf(@result)
-#         end
+        setup :stem, "stem" do
+          @stem = Stem.allocate
+          @params = {foo: :bar}
+          @result = @params.merge({type: @method})
+          @stem.expects(:leaf).with(@result)
+        end
 
-#         assert ":method" do
-#           case @method
-#           when :member
-#             @stem.member @params
-#           when :collection
-#             @stem.collection @params
-#           end
-#         end
+        assert ":method" do
+          case @method
+          when :member
+            @stem.member @params
+          when :collection
+            @stem.collection @params
+          end
+          true
+        end
 
-#       end
+      end
 
-#       assert "stem"
+      assert "stem"
 
     end
 
