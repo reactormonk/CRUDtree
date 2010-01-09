@@ -1,12 +1,13 @@
 module CRUDtree
   class Trunk
 
-    def initialize
+    # Use :rango => true if you're using rango
+    def initialize(params = {})
       @stems = []
+      @params = params
     end
 
-    attr_reader :stems, :klass
-    attr_accessor :compiler
+    attr_reader :stems, :params
 
     def add_stem(params, &block)
       @stems << Stem.new(params, &block)
