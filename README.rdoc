@@ -19,11 +19,24 @@ Leaf:: A route endpoint (if it's a Leaf) or a nested resource (if it's a Stem)
 
 == Usage
 
+=== as Tinkerer
+
   CRUDtree::Interface.for(:usher_rack, rango: true)
   
   Usher::Interface.for(:rack) do
     stem(klass: Posts) do
       leaf(type: :member, call: :show, rest: :get)
       leaf(type: :collection, call: :index, rest: :get)
+    end
+  end
+
+=== As Dev
+
+  CRUDtree::Interface.for(:usher_rack, rango: true)
+  
+  Usher::Interface.for(:rack) do
+    resource(klass: Posts) do # the resource helper will include a bunch of default routes
+      member(call: :show, rest: :get)
+      collection(call: :index, rest: :get)
     end
   end
