@@ -21,7 +21,7 @@ Leaf:: A route endpoint.
 
 === as Tinkerer
 
-  CRUDtree::Interface.for(:usher_rack, rango: true)
+  CRUDtree::Interface.for(:usher_rack, rango: true).add_helper(CRUDtree::Interface::Helper)
   
   Usher::Interface.for(:rack) do
     stem(klass: Posts) do
