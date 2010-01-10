@@ -3,3 +3,4 @@ require 'crudtree'
 require 'baretest/mocha'
 include CRUDtree
 include Mocha::API
+require 'ruby-debug'

@@ -22,13 +22,13 @@ BareTest.suite "CRUDtree" do
           end
 
           setup :leaf, "member Leaf" do
-            @leaf = Leaf.new(type: :member, rest: :get, call: :show, path: "show", name: :post)
+            @leaf = Leaf.new(nil, type: :member, rest: :get, call: :show, path: "show", name: :post)
             CRUDtree::Interface::Usher.expects(:compile_path).with("/:id", @stem, @leaf)
             CRUDtree::Interface::Usher.expects(:compile_path).with("/foo/:id", @stem, @leaf)
           end
 
           setup :leaf, "collection Leaf" do
-            @leaf = Leaf.new(type: :collection, rest: :get, call: :index, path: "index", name: :posts)
+            @leaf = Leaf.new(nil, type: :collection, rest: :get, call: :index, path: "index", name: :posts)
             CRUDtree::Interface::Usher.expects(:compile_path).with("", @stem, @leaf)
             CRUDtree::Interface::Usher.expects(:compile_path).with("/foo", @stem, @leaf)
           end

@@ -10,7 +10,7 @@ module CRUDtree
     attr_reader :stems, :params
 
     def add_stem(params, &block)
-      @stems << Stem.new(params, &block)
+      @stems << Stem.new(self, params, &block)
     end
   end
 end

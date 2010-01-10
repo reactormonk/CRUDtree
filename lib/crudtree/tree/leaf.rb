@@ -7,9 +7,9 @@ module CRUDtree
     #
     # :path
     # path to this leaf - you can use 
-    # /join
+    # join
     # or
-    # /join/:date/:foo/:whatever
+    # join/:date/:foo/:whatever
     # the interface will handle those parameters.
     # Defaults to call.to_s
     #
@@ -21,20 +21,18 @@ module CRUDtree
     #
     # :name
     # The name of this route, used for generating. Symbol.
-    def initialize(params)
+    def initialize(parent, params)
       @type = params[:type] if [:member, :collection].include? params[:type]
       raise ArgumentError, "Invalid type: #{params[:type]}" unless @type
-
       @call = params[:call] or raise ArgumentError, "No call given."
-
       @path = params[:path] || @call.to_s
       raise ArgumentError, "No path given." unless @path
-
       @rest = params[:rest]
-
-      @name = params[:name] || @call
+      @name = params[:name]
+      @stem = params[:stem]
+      @parent = parent
     end
 
-    attr_reader :type, :path, :rest, :call, :name
+    attr_reader :type, :path, :rest, :call, :name, :stem, :parent
   end
 end

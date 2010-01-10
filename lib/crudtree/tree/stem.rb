@@ -19,31 +19,32 @@ module CRUDtree
     # :default_member
     # The member which is chosen when no method is given. Defaults to :show.
     #
-    # :paths
-    # You may specify mutiple paths which generate the route. When generating,
-    # the first one is being taken.
+    # :path
+    # Specify the path you want to call this resource with.
+    # Defaults to klass.to_s.downcase
     #
-    def initialize(params, &block)
-      @class = params[:klass]
+    def initialize(parent, params, &block)
+      @klass = params[:klass]
       @identifier = params[:identifier] || :id
       @default_collection = params[:default_collection] || :index
       @default_member = params[:default_member] || :show
-      @paths = if params[:paths]
-                 [params[:paths]].flatten
+      @path = if params[:path]
+                 params[:path]
                elsif params[:klass]
-                 ["/" + params[:klass].to_s.downcase.split("::").last] 
+                 params[:klass].to_s.downcase.split("::").last 
                else
                 raise ArgumentError, "No paths given"
                end
       @leafs = []
+      @parent = parent
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
-    attr_reader :klass, :identifier, :default_collection, :default_member, :paths
+    attr_reader :klass, :identifier, :default_collection, :default_member, :path, :parent
 
     # Creates a new Leaf and attaches it to this Stem.
     def branch(params)
-      @leafs << Leaf.new(params)
+      @leafs << Leaf.new(self, params)
     end
 
     # Creates a new leaf with type member. See Leaf.
@@ -57,7 +58,7 @@ module CRUDtree
     end
 
     def stem(params, &block)
-      @leafs << Stem.new(params, &block)
+      @leafs << Stem.new(self, params, &block)
     end
   end
 end

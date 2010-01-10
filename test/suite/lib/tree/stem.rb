@@ -9,35 +9,17 @@ BareTest.suite "CRUDtree" do
         suite "paths" do
 
           assert "defaults to the name of the class" do
-            Stem.new(klass: Stem){:foo}.paths.first == "/stem"
+            Stem.new(nil, klass: Stem){:foo}.path == "stem"
           end
 
           assert "raises if no path is given" do
-            raises(ArgumentError) {Stem.new(foo: :bar){:foo}}
-          end
-
-          suite "path sanitizing" do
-
-            setup :input, "no Array" do
-              @paths = "/foo"
-              @result = ["/foo"]
-            end
-
-            setup :input, "an Array" do
-              @paths = ["/foo", "/bar"]
-              @result = ["/foo", "/bar"]
-            end
-
-            assert ":input is always a flattened Array" do
-              Stem.new(paths: @paths){:foo}.paths == @result
-            end
-
+            raises(ArgumentError) {Stem.new(nil, foo: :bar){:foo}}
           end
 
         end
 
         assert "raises if no block is given" do
-          raises(ArgumentError) {Stem.new(foo: :bar)}
+          raises(ArgumentError) {Stem.new(nil, foo: :bar)}
         end
         
       end
