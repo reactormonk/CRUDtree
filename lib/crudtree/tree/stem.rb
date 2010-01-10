@@ -39,7 +39,7 @@ module CRUDtree
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
-    attr_reader :klass_name, :identifier, :default_collection, :default_member, :paths
+    attr_reader :klass, :identifier, :default_collection, :default_member, :paths
 
     # Creates a new Leaf and attaches it to this Stem.
     def branch(params)
