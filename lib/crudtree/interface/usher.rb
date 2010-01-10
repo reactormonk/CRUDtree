@@ -1,12 +1,13 @@
+require_relative "../interface"
 module CRUDtree
   module Interface
     module Usher
       # Integration part
       
-      def initialize(params = {}, &block)
+      def initialize(app = nil, params = {}, &block)
         @trunk = Trunk.new
         params.merge!(:allow_identical_variable_names => false)
-        super(nil, params, &block)
+        super(app, params, &block)
       end
 
       def trunk_params

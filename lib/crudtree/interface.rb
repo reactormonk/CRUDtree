@@ -1,5 +1,4 @@
-#require_relative 'interfaces/usher'
-
+require_relative "tree"
 module CRUDtree
   module Interface
     InterfaceRegistry = {}

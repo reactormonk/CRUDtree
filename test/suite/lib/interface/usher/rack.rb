@@ -22,7 +22,7 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a simple leaf" do
             @pre_path = ""
-            @leaf = Leaf.new(type: :member, call: :foo, name: :foo)
+            @leaf = Leaf.new(type: :member, call: :foo, name: "foo")
             @stem = OpenStruct.new(klass: TestObj)
             @path = "/foo"
             @params = {name: :foo, conditions: {}}
@@ -32,7 +32,7 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a more complex leaf" do
             @pre_path = "/bar"
-            @leaf = Leaf.new(type: :member, call: :foo, name: :foo)
+            @leaf = Leaf.new(type: :member, call: :foo, name: "foo")
             @stem = OpenStruct.new(klass: TestObj)
             @path = "/bar/foo"
             @params = {name: :foo, conditions: {}}

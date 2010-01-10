@@ -7,7 +7,7 @@ module CRUDtree
         include CRUDtree::Interface::Usher
 
         def self.attach
-          Usher::Interface::Rack.include self
+          ::Usher::Interface::Rack.send(:include, self)
         end
 
         private
@@ -16,7 +16,7 @@ module CRUDtree
           conditions.merge!({request_method: leaf.rest.to_s.upcase}) if leaf.rest
           method_call = [leaf.call]
           method_call.unshift(:dispatcher) if trunk_params[:rango]
-          path("#{pre_path}/#{leaf.path}", name: leaf.name, conditions: conditions).to(stem.klass.send(*method_call))
+          path("#{pre_path}/#{leaf.path}", name: leaf.name.to_sym, conditions: conditions).to(stem.klass.send(*method_call))
         end
       end
     end
