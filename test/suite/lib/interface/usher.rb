@@ -2,7 +2,7 @@ require 'crudtree/interface/usher'
 require 'ostruct'
 
 module CRUDtree::Interface::Usher
-  public :compile_leaf, :compile_stem
+  public :compile_branch, :compile_stem
   extend self
 end
 
@@ -12,46 +12,22 @@ BareTest.suite "CRUDtree" do
 
     suite "usher" do
 
-      suite "#compile_leaf" do
+      suite "#compile_branch" do
 
-        suite "Leaf" do
-
-          setup do
-            @stem = OpenStruct.new(identifier: :id)
-            @pre_paths = ["", "/foo"]
-          end
-
-          setup :leaf, "member Leaf" do
-            @leaf = Leaf.new(nil, type: :member, rest: :get, call: :show, path: "show", name: :post)
-            CRUDtree::Interface::Usher.expects(:compile_path).with("/:id", @stem, @leaf)
-            CRUDtree::Interface::Usher.expects(:compile_path).with("/foo/:id", @stem, @leaf)
-          end
-
-          setup :leaf, "collection Leaf" do
-            @leaf = Leaf.new(nil, type: :collection, rest: :get, call: :index, path: "index", name: :posts)
-            CRUDtree::Interface::Usher.expects(:compile_path).with("", @stem, @leaf)
-            CRUDtree::Interface::Usher.expects(:compile_path).with("/foo", @stem, @leaf)
-          end
-
-          assert "compilation with a :leaf" do
-            CRUDtree::Interface::Usher.compile_leaf(@pre_paths, @stem, @leaf)
-          end
-
+        setup :branch, "Stem" do
+          @pre_path = ""
+          @branch = Stem.allocate
+          CRUDtree::Interface::Usher.expects(:compile_stem).with(@pre_path, @branch).returns(true)
         end
 
-        suite "Stem" do
+        setup :branch, "Leaf" do
+          @pre_path = ""
+          @branch = Leaf.allocate
+          CRUDtree::Interface::Usher.expects(:compile_leaf).with(@pre_path, @branch).returns(true)
+        end
 
-          setup :stem, "Stem" do
-            @stem = Object.new
-            @leaf = Stem.allocate
-            @pre_paths = [""]
-            CRUDtree::Interface::Usher.expects(:compile_stem).with([""], @leaf).returns(true)
-          end
-
-          assert "compilation with a :stem" do
-            CRUDtree::Interface::Usher.compile_leaf(@pre_paths, @stem, @leaf)
-          end
-
+        assert "Compilation with a :branch as branch" do
+          CRUDtree::Interface::Usher.compile_branch(@pre_path, @branch)
         end
 
       end
@@ -62,7 +38,7 @@ BareTest.suite "CRUDtree" do
           @leaf = Object.new
           @pre_paths = ["", "/baz"]
           @stem = OpenStruct.new(paths: ["foo", "bar"], leafs: [@leaf])
-          CRUDtree::Interface::Usher.expects(:compile_leaf).with(["/foo", "/bar", "/baz/foo", "/baz/bar"], @stem, @leaf).returns(true)
+          CRUDtree::Interface::Usher.expects(:compile_leaf).with(["/foo", "/bar", "/baz/foo", "/baz/bar"], @stem).returns(true)
         end
 
         assert "compilation" do

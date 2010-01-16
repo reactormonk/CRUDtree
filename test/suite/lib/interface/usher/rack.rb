@@ -24,7 +24,7 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a simple member leaf" do
             @pre_path = ""
-            @stem = OpenStruct.new(klass: TestObj, identifier: :id, path: "testobj")
+            @stem = OpenStruct.new(klass: TestObj, identifier: :id, paths: "testobj")
             @leaf = Leaf.new(@stem, type: :member, call: :foo, name: "foo")
             @path = "/testobj/:id/foo"
             @params = {conditions: {}}
@@ -34,7 +34,7 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a more complex collection leaf" do
             @pre_path = "/bar"
-            @stem = OpenStruct.new(klass: TestObj, identifier: :id, path: "testobj")
+            @stem = OpenStruct.new(klass: TestObj, identifier: :id, paths: "testobj")
             @leaf = Leaf.new(@stem, type: :collection, call: :foo, name: "foo")
             @path = "/bar/testobj/foo"
             @params = {conditions: {}}
@@ -44,7 +44,7 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a nested collection leaf" do
             @pre_path = ""
-            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, path: "cont1"){:foo}
+            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1"){:foo}
             @stem2 = Stem.new(@stem1, klass: TestObj){:foo}
             @leaf = Leaf.new(@stem2, type: :collection, call: :foo, name: "foo")
             @path = "/cont1/:id/testobj/foo"
@@ -55,7 +55,7 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a nested member leaf" do
             @pre_path = ""
-            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, path: "cont1"){:foo}
+            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1"){:foo}
             @stem2 = Stem.new(@stem1, klass: TestObj){:foo}
             @leaf = Leaf.new(@stem2, type: :member, call: :foo, name: "foo")
             @path = "/cont1/:id/testobj/:id/foo"
