@@ -2,7 +2,7 @@ module CRUDtree
   module Interface
     module Helper
       def resource(params, &block)
-        stem = @trunk.add_stem(params, &block)
+        stem = @trunk.stem(params, &block)
         stem.collection(call: :index, rest: :get)
         stem.member(call: :show, rest: :get)
         stem.member(call: :new, rest: :get)

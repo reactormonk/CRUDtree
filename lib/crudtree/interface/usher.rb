@@ -17,7 +17,7 @@ module CRUDtree
       # Logic part
 
       def stem(params, &block)
-        stem = @trunk.add_stem(params, &block)
+        stem = @trunk.stem(params, &block)
         compile_stem(stem, "")
       end
 
