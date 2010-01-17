@@ -29,7 +29,7 @@ module CRUDtree
       @default_collection = params[:default_collection] || :index
       @default_member = params[:default_member] || :show
       @paths = if params[:paths]
-                 [params[:paths]]
+                 [params[:paths]].flatten
                elsif params[:klass]
                  [params[:klass].to_s.downcase.split("::").last]
                else
