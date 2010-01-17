@@ -15,3 +15,13 @@ class TestObj0; end
 class TestObj1; end
 class TestObj2; end
 
+def default_routes(number=0)
+  default_route(TestObj0)
+  default_route(TestObj1, "/testobj0/:id") if number > 0
+  default_route(TestObj2, "/testobj0/:id/testobj1/:id") if number > 1
+end
+
+def default_route(klass, pre_path=nil)
+  results_in("#{pre_path}/#{klass.to_s.downcase}", klass, :index, :conditions => {:request_method => "GET"})
+  results_in("#{pre_path}/#{klass.to_s.downcase}/:id", klass, :show, :conditions => {:request_method => "GET"})
+end
