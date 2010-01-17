@@ -8,7 +8,7 @@ BareTest.suite "CRUDtree" do
     setup :tree, "a simple tree" do
       @block = proc {
         stem(klass: TestObj0) do
-          branch(type: :collection, call: :index, rest: :get)
+          collection(call: :index, rest: :get)
         end
       }
       results_in("/testobj0/index", TestObj0, :index, :conditions => {:request_method => "GET"})
