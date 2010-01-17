@@ -21,7 +21,7 @@ module CRUDtree
           method_call = [leaf.call]
           method_call.unshift(:dispatcher) if trunk_params[:rango]
           # Here we call usher.
-          path(compile_path_string(pre_path, leaf), conditions: conditions).to(leaf.parent.klass.send(*method_call))
+          path(compile_path(pre_path, leaf), conditions: conditions).to(leaf.parent.klass.send(*method_call))
         end
 
         def compile_path(pre_path, leaf)

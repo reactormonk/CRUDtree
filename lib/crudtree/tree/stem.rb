@@ -19,8 +19,8 @@ module CRUDtree
     # :default_member
     # The member which is chosen when no method is given. Defaults to :show.
     #
-    # :path
-    # Specify the path you want to call this resource with.
+    # :paths
+    # Specify the path(s) you want to call this resource with.
     # Defaults to klass.to_s.downcase
     #
     def initialize(parent, params, &block)
@@ -28,10 +28,10 @@ module CRUDtree
       @identifier = params[:identifier] || :id
       @default_collection = params[:default_collection] || :index
       @default_member = params[:default_member] || :show
-      @path = if params[:path]
-                 params[:path]
+      @paths = if params[:paths]
+                 [params[:paths]]
                elsif params[:klass]
-                 params[:klass].to_s.downcase.split("::").last 
+                 [params[:klass].to_s.downcase.split("::").last]
                else
                 raise ArgumentError, "No paths given"
                end
@@ -40,7 +40,7 @@ module CRUDtree
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
-    attr_reader :klass, :identifier, :default_collection, :default_member, :path, :parent
+    attr_reader :klass, :identifier, :default_collection, :default_member, :paths, :parent, :leafs
 
     # Creates a new Leaf and attaches it to this Stem.
     def branch(params)

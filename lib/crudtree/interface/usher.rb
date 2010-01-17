@@ -4,28 +4,27 @@ module CRUDtree
     module Usher
       # Integration part
       
-      def initialize(app = nil, params = {}, &block)
-        @trunk = Trunk.new
-        super(app, params, &block)
+      def trunk_params
+        trunk.params
       end
 
-      def trunk_params
-        @trunk.params
+      def trunk
+        @trunk ||= Trunk.new
       end
 
       # Logic part
 
       def stem(params, &block)
-        stem = @trunk.stem(params, &block)
-        compile_stem(stem, "")
+        stem = trunk.stem(params, &block)
+        compile_stem("", stem)
       end
 
       private
       def compile_stem(pre_path, stem)
-        paths = stem.paths.map {|p| "#{pre_path}/#{stem.path}"}
+        paths = stem.paths.map {|p| "#{pre_path}/#{p}"}
         paths.each do |path|
           stem.leafs.each do |leaf|
-              compile_branch(path, stem)
+            compile_branch(path, leaf)
           end
         end
       end
