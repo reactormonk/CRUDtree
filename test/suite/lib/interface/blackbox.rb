@@ -2,9 +2,6 @@ BareTest.suite "CRUDtree" do
 
   suite "blackbox" do
 
-    setup do
-    end
-
     setup :tree, "a simple tree" do
       @block = proc {
         stem(klass: TestObj0) do
