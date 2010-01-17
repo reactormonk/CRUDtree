@@ -34,7 +34,7 @@ module CRUDtree
         when Leaf
           compile_leaf(pre_path, branch)
         when Stem
-          compile_stem(pre_path, branch)
+          compile_stem("#{pre_path}/:#{branch.identifier}", branch)
         end
       end
 

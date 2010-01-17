@@ -15,9 +15,9 @@ BareTest.suite "CRUDtree" do
       suite "#compile_branch" do
 
         setup :branch, "Stem" do
-          @pre_path = ""
-          @branch = Stem.allocate
-          CRUDtree::Interface::Usher.expects(:compile_stem).with(@pre_path, @branch).returns(true)
+          @pre_path = "/foo"
+          @branch = Stem.new(nil, klass: Object, paths: "foo") {:foo}
+          CRUDtree::Interface::Usher.expects(:compile_stem).with("/foo/:id", @branch).returns(true)
         end
 
         setup :branch, "Leaf" do
