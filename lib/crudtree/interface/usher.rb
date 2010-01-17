@@ -6,7 +6,6 @@ module CRUDtree
       
       def initialize(app = nil, params = {}, &block)
         @trunk = Trunk.new
-        params.merge!(:allow_identical_variable_names => false)
         super(app, params, &block)
       end
 
