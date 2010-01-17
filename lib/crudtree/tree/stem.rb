@@ -38,6 +38,9 @@ module CRUDtree
       @leafs = []
       @parent = parent
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
+      # default routes
+      @leafs.unshift(Leaf.new(self, type: :member, call: :show, path: "", rest: :get))
+      @leafs.unshift(Leaf.new(self, type: :collection, call: :index, path: "", rest: :get))
     end
 
     attr_reader :klass, :identifier, :default_collection, :default_member, :paths, :parent, :leafs

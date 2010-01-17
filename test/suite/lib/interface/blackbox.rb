@@ -12,6 +12,9 @@ BareTest.suite "CRUDtree" do
         end
       }
       results_in("/testobj0/index", TestObj0, :index, :conditions => {:request_method => "GET"})
+      # default routes
+      results_in("/testobj0", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
     end
 
      setup :tree, "a nested tree" do
@@ -23,6 +26,11 @@ BareTest.suite "CRUDtree" do
         end
       }
       results_in("/testobj0/:id/testobj1/:id/show", TestObj1, :show, :conditions => {:request_method => "GET"})
+      # default routes
+      results_in("/testobj0", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1/:id", TestObj1, :show, :conditions => {:request_method => "GET"})
      end
 
      setup :tree, "a twice nested tree" do
@@ -36,6 +44,13 @@ BareTest.suite "CRUDtree" do
         end
       }
       results_in("/testobj0/:id/testobj1/:id/testobj2/create", TestObj2, :create, :conditions => {:request_method => "POST"})
+      # default routes
+      results_in("/testobj0", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1/:id", TestObj1, :show, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1/:id/testobj2", TestObj2, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1/:id/testobj2/:id", TestObj2, :show, :conditions => {:request_method => "GET"})
      end
 
      setup :tree, "a tree with some leafs" do
@@ -47,13 +62,17 @@ BareTest.suite "CRUDtree" do
         end
       }
       results_in("/testobj0/index", TestObj0, :index, :conditions => {:request_method => "GET"})
-      results_in("/testobj0/:id/show", TestObj0, :show, :conditions => {:request_method => "GET"})
       results_in("/testobj0/:id/edit", TestObj0, :update, :conditions => {:request_method => "PUT"})
+      results_in("/testobj0/:id/show", TestObj0, :show, :conditions => {:request_method => "GET"})
+      # default routes
+      results_in("/testobj0", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
      end
 
      setup :tree, "a nested tree with some leafs" do
       @block = proc {
         stem(klass: TestObj0) do
+          member(call: :show, rest: :get)
           stem(klass: TestObj1) do
             collection(call: :index, rest: :get)
             member(call: :show, rest: :get)
@@ -61,9 +80,15 @@ BareTest.suite "CRUDtree" do
           end
         end
       }
+      results_in("/testobj0/:id/show", TestObj0, :show, :conditions => {:request_method => "GET"})
       results_in("/testobj0/:id/testobj1/index", TestObj1, :index, :conditions => {:request_method => "GET"})
       results_in("/testobj0/:id/testobj1/:id/show", TestObj1, :show, :conditions => {:request_method => "GET"})
       results_in("/testobj0/:id/testobj1/:id/edit", TestObj1, :update, :conditions => {:request_method => "PUT"})
+      # default routes
+      results_in("/testobj0", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/:id/testobj1/:id", TestObj1, :show, :conditions => {:request_method => "GET"})
      end
 
      setup :tree, "a tree with multiple paths" do
@@ -75,6 +100,13 @@ BareTest.suite "CRUDtree" do
       results_in("/test/index", TestObj0, :index, :conditions => {:request_method => "GET"})
       results_in("/foo/index", TestObj0, :index, :conditions => {:request_method => "GET"})
       results_in("/bar/index", TestObj0, :index, :conditions => {:request_method => "GET"})
+      # default routes
+      results_in("/test", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/foo", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/bar", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/test/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/foo/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/bar/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
      end
 
      setup :tree, "a nested tree with multiple paths" do
@@ -92,6 +124,19 @@ BareTest.suite "CRUDtree" do
       results_in("/bar/:id/test/:id/edit", TestObj1, :edit, :conditions => {:request_method => "GET"})
       results_in("/foo/:id/baz/:id/edit", TestObj1, :edit, :conditions => {:request_method => "GET"})
       results_in("/bar/:id/baz/:id/edit", TestObj1, :edit, :conditions => {:request_method => "GET"})
+      # default routes
+      results_in("/foo", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/bar", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/foo/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/bar/:id", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/foo/:id/test", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/bar/:id/test", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/foo/:id/baz", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/bar/:id/baz", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/foo/:id/test/:id", TestObj1, :show, :conditions => {:request_method => "GET"})
+      results_in("/bar/:id/test/:id", TestObj1, :show, :conditions => {:request_method => "GET"})
+      results_in("/foo/:id/baz/:id", TestObj1, :show, :conditions => {:request_method => "GET"})
+      results_in("/bar/:id/baz/:id", TestObj1, :show, :conditions => {:request_method => "GET"})
      end
 
     assert "compilation of :tree" do

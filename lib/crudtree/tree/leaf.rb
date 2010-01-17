@@ -29,10 +29,9 @@ module CRUDtree
       raise ArgumentError, "No path given." unless @path
       @rest = params[:rest]
       @name = params[:name]
-      @stem = params[:stem]
       @parent = parent
     end
 
-    attr_reader :type, :path, :rest, :call, :name, :stem, :parent
+    attr_reader :type, :path, :rest, :call, :name, :parent
   end
 end

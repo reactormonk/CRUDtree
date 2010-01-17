@@ -28,7 +28,7 @@ module CRUDtree
           stem = leaf.parent
           compiled_path = [pre_path]
           compiled_path << ":#{stem.identifier}" if leaf.type == :member
-          compiled_path << "#{leaf.path}"
+          compiled_path << "#{leaf.path}" unless leaf.path.empty?
           compiled_path.join('/')
         end
 
