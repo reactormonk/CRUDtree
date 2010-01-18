@@ -2,7 +2,7 @@ def results_in(path, klass, call, params)
   klass.expects(call).returns(:yeah!)
   to_mock = mock('to')
   to_mock.expects(:to).with(:yeah!).returns(true)
-  Usher::Interface::Rack.any_instance.expects(:path).with(path, params).returns(to_mock)
+  Usher::Interface.class_for(:rack).any_instance.expects(:path).with(path, params).returns(to_mock)
 end
 
 module Usher; module Interface; class Rack;

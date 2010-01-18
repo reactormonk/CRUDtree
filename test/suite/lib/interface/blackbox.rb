@@ -124,7 +124,7 @@ BareTest.suite "CRUDtree" do
      end
 
     assert "compilation of :tree" do
-      Usher::Interface::Rack.new(&@block)
+      Usher::Interface.class_for(:rack).new(&@block)
     end
 
   end

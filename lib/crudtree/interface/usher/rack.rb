@@ -7,7 +7,7 @@ module CRUDtree
         include CRUDtree::Interface::Usher
 
         def self.attach
-          ::Usher::Interface::Rack.send(:include, self)
+          ::Usher::Interface.class_for(:rack).send(:include, self)
         end
 
         def self.add_helper(helper)
