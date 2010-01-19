@@ -53,6 +53,36 @@ BareTest.suite "CRUDtree" do
 
       end
 
+      suite "tree walking" do
+
+        setup :trunk, "a simple trunk" do
+          @trunk = Trunk.new
+          @stem = @trunk.stem(klass: Object, model: Object){:foo}
+          @parents = []
+          @children = {}
+        end
+
+        suite "#parents" do
+
+          setup :trunk, "a more complex trunk" do
+            @trunk = Trunk.new
+            @stem = @trunk.stem(klass: Object, model: Object){
+              stem(klass: Object, model: Object){
+                stem(klass: Object, model: Object){:foo}
+                stem(klass: Object, model: Object){:foo}
+              }
+            }
+            @parents = [@trunk.stems.first, @trunk.stems.first.leafs.first]
+          end
+
+          assert "it find the parents in :trunk" do
+            @stem.parents.equals @parents
+          end
+
+        end
+
+      end
+
     end
 
   end

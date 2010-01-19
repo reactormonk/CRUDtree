@@ -8,17 +8,17 @@ BareTest.suite do
       suite "#compile_route_from_stem" do
 
         setup :stem, "a simple stem" do
-          @stem = OpenStruct.new(:paths => ["foo"], :identifier => :id)
+          @stem = Stem.new(nil, :paths => ["foo"], klass: Object, model: Object ){:foo}
           @path = "/foo/:id"
         end
 
-         setup :stem, "a stem with multiple parents" do
-          @stem = OpenStruct.new(:paths => ["foo"], :identifier => :id,
-                    :parent => OpenStruct.new(:paths => ["bar"], :identifier => :id,
-                      :parent => OpenStruct.new(:paths => ["baz"], :identifier => :id,
-                        :parent => nil)
-                      )
-                    )
+        setup :stem, "a stem with multiple parents" do
+          trunk = Trunk.new
+          @stem = trunk.stem(klass: Object, model: Object, paths: ["foo"]) do
+            stem(klass: Object, model: Object, paths: ["bar"]) do
+              stem(klass: Object, model: Object, paths: ["baz"]) {:foo}
+            end
+          end
           @path = "/foo/:id/bar/:id/baz/:id"
         end
 

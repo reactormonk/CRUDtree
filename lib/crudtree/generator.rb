@@ -44,8 +44,9 @@ module CRUDtree
 
     def compile_route_from_stem(stem)
       path = ""
-      path << compile_route_from_stem(stem.parent) if stem.parent.respond_to? :parent
-      path << "/#{stem.paths.first}/:#{stem.identifier}"
+      stem.parents.each {|parent|
+        path << "/#{stem.paths.first}/:#{stem.identifier}"
+      }
     end
 
     def valid_model_for_stem?(model, stem)

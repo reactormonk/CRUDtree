@@ -57,7 +57,7 @@ module CRUDtree
       end
       @parent_call =  if params[:parent_call]
                         params[:parent_call]
-                      elsif parent.respond_to? :parent # see if it's not the trunk
+                      elsif parents.first
                         parent.model.to_s.split('::').last
                       else
                         nil
@@ -83,6 +83,17 @@ module CRUDtree
 
     def stem(params, &block)
       @leafs << Stem.new(self, params, &block)
+    end
+
+    def parents
+      [find_parent(self)].flatten[0..-2]
+    end
+
+    private
+    def find_parent(stem)
+      if stem.parent.respond_to? :parent
+        [stem.parent, find_parent(stem.parent)]
+      end
     end
   end
 end
