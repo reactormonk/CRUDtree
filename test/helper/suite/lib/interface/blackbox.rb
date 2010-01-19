@@ -25,3 +25,12 @@ def default_route(klass, pre_path=nil)
   results_in("#{pre_path}/#{klass.to_s.downcase}", klass, :index, :conditions => {:request_method => "GET"})
   results_in("#{pre_path}/#{klass.to_s.downcase}/:id", klass, :show, :conditions => {:request_method => "GET"})
 end
+module Usher
+  module Interface
+    def self.class_for(interface)
+      Rack
+    end
+    class Rack
+    end
+  end
+end
