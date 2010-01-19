@@ -115,9 +115,7 @@ BareTest.suite do
 
         suite "with duplicates" do
 
-          setup :trunk, "a complex trunk" do
-            @stem = []
-            @resource = []
+          setup do
             @trunk = Trunk.new
             @trunk.stem(klass: Klass0, model: Mod0) do
               stem(klass: Klass1, model: Mod1){:foo}
@@ -125,27 +123,25 @@ BareTest.suite do
                 stem(klass: Klass2, model: Mod2){:foo}
               end
             end
-            @stem << @trunk.stems.first.stems.last.stems.first
-            @resource << Mod2.new(Mod2)
-            @stem << @trunk.stems.first.stems.last
-            @resource << Mod2.new(Mod0)
             @generator = CRUDtree::Generator.new(@trunk)
           end
 
-          assert "#valid_model_for_stem? returns true" do
-            @generator.send(:valid_model_for_stem?, @resource[0], @stem[0])
+          setup :stem, "nested stem" do
+            @stem = @trunk.stems.first.stems.last.stems.first
+            @resource = Mod2.new(Mod2)
           end
 
-          assert "#valid_model_for_stem? returns true" do
-            @generator.send(:valid_model_for_stem?, @resource[1], @stem[1])
+          setup :stem, "first stem" do
+            @stem = @trunk.stems.first.stems.last
+            @resource = Mod2.new(Mod0)
           end
 
-          assert "#find_stem gets the child stem from :trunk" do
-            same(@stem[0], @generator.send(:find_stem, @resource[0]))
+          assert "#valid_model_for_stem? returns true for the :stem" do
+            @generator.send(:valid_model_for_stem?, @resource, @stem)
           end
 
-          assert "#find_stem finds the parent stem on :trunk" do
-            same(@stem[1], @generator.send(:find_stem, @resource[1]))
+          assert "#find_stem gets the right model for the :stem" do
+            same(@stem, @generator.send(:find_stem, @resource))
           end
 
         end
