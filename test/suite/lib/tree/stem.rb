@@ -9,7 +9,7 @@ BareTest.suite "CRUDtree" do
         suite "paths" do
 
           assert "defaults to the name of the class" do
-            Stem.new(nil, klass: Stem){:foo}.paths == ["stem"]
+            Stem.new(nil, klass: Stem, model: Object){:foo}.paths == ["stem"]
           end
 
           assert "raises if no path is given" do

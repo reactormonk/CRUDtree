@@ -1,15 +1,6 @@
 require 'crudtree/interface/usher/rack'
 require 'ostruct'
 
-module CRUDtree::Interface::Usher::Rack
-  public :compile_path
-  extend self
-end
-
-class TestObj < Object; end
-class TestObj2 < Object; end
-class Cont1 < Object; end
-class Cont2 < Object; end
 
 
 BareTest.suite "CRUDtree" do
@@ -19,6 +10,18 @@ BareTest.suite "CRUDtree" do
     suite "usher" do
 
       suite "rack" do
+
+        setup do
+          module CRUDtree::Interface::Usher::Rack
+            public :compile_path
+            extend self
+          end
+
+          class TestObj < Object; end
+          class TestObj2 < Object; end
+          class Cont1 < Object; end
+          class Cont2 < Object; end
+        end
 
         suite "#compile_path" do
 
@@ -44,9 +47,9 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a nested collection leaf" do
             @pre_path = ""
-            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1"){:foo}
-            @stem2 = Stem.new(@stem1, klass: TestObj){:foo}
-            @leaf = Leaf.new(@stem2, type: :collection, call: :foo, name: "foo")
+            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1", model: Object){:foo}
+            @stem2 = Stem.new(@stem1, klass: TestObj, model: Object){:foo}
+            @leaf = Leaf.new(@stem2, type: :collection, call: :foo, name: "foo", model: Object)
             @path = "/cont1/:id/testobj/foo"
             @params = {conditions: {}}
             @send = [:dispatcher, :foo]
@@ -55,8 +58,8 @@ BareTest.suite "CRUDtree" do
 
           setup :leaf, "a nested member leaf" do
             @pre_path = ""
-            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1"){:foo}
-            @stem2 = Stem.new(@stem1, klass: TestObj){:foo}
+            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1", model: Object){:foo}
+            @stem2 = Stem.new(@stem1, klass: TestObj, model: Object){:foo}
             @leaf = Leaf.new(@stem2, type: :member, call: :foo, name: "foo")
             @path = "/cont1/:id/testobj/:id/foo"
             @params = {conditions: {}}

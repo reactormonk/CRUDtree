@@ -16,7 +16,7 @@ BareTest.suite "CRUDtree" do
 
         setup :branch, "Stem" do
           @pre_path = "/foo"
-          @branch = Stem.new(nil, klass: Object, paths: "foo") {:foo}
+          @branch = Stem.new(nil, klass: Object, paths: "foo", model: Object) {:foo}
           CRUDtree::Interface::Usher.expects(:compile_stem).with("/foo/:id", @branch).returns(true)
         end
 

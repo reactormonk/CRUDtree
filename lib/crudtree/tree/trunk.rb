@@ -8,6 +8,7 @@ module CRUDtree
     end
 
     attr_reader :stems, :params
+    attr_accessor :mapping
 
     def stem(params, &block)
       @stems << new_stem = Stem.new(self, params, &block)
