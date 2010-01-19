@@ -45,7 +45,20 @@ BareTest.suite do
         setup :trunk, "a complex trunk" do
           trunk = CRUDtree::Trunk.new
           @generator = CRUDtree::Generator.new(trunk)
-          @stem = trunk.stem(klass: Object, model: TestObj1){ stem(klass: Object, model: TestObj0){:foo}}
+          @stem = trunk.stem(klass: Object, model: TestObj1){
+            stem(klass: Object, model: TestObj0){:foo}
+          }
+          @model = TestObj0
+        end
+
+        setup :trunk, "a trunk with duplicate models" do
+          trunk = CRUDtree::Trunk.new
+          @generator = CRUDtree::Generator.new(trunk)
+          trunk.stem(klass: Object, model: TestObj1){
+            stem(klass: Object, model: TestObj0){:foo}
+            stem(klass: Object, model: TestObj0){:foo}
+          }
+          @stem = trunk.stems
           @model = TestObj0
         end
 
