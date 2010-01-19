@@ -33,5 +33,6 @@ module CRUDtree
     end
 
     attr_reader :type, :path, :rest, :call, :name, :parent
+
   end
 end

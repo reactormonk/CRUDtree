@@ -66,17 +66,18 @@ BareTest.suite "CRUDtree" do
 
           setup :trunk, "a more complex trunk" do
             @trunk = Trunk.new
-            @stem = @trunk.stem(klass: Object, model: Object){
+            @trunk.stem(klass: Object, model: Object){
               stem(klass: Object, model: Object){
                 stem(klass: Object, model: Object){:foo}
                 stem(klass: Object, model: Object){:foo}
               }
             }
-            @parents = [@trunk.stems.first, @trunk.stems.first.leafs.first]
+            @stem = @trunk.stems.first.stems.first.stems.first
+            @parents = [@trunk.stems.first.stems.first,@trunk.stems.first]
           end
 
           assert "it find the parents in :trunk" do
-            @stem.parents.equals @parents
+            equal(@stem.parents, @parents)
           end
 
         end

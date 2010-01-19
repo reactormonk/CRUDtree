@@ -47,7 +47,6 @@ module CRUDtree
                end
       @leafs = []
       @parent = parent
-      block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
       # default routes
       @leafs.unshift(Leaf.new(self, type: :member, call: :show, path: "", rest: :get))
       @leafs.unshift(Leaf.new(self, type: :collection, call: :index, path: "", rest: :get))
@@ -57,11 +56,12 @@ module CRUDtree
       end
       @parent_call =  if params[:parent_call]
                         params[:parent_call]
-                      elsif parents.first
-                        parent.model.to_s.split('::').last
+                      elsif ! parent_is_trunk?
+                        parent.model.to_s.split('::').last.downcase
                       else
                         nil
                       end
+      block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
     attr_reader :klass, :identifier, :default_collection, :default_member, :paths, :parent, :leafs, :model, :parent_call
@@ -87,6 +87,14 @@ module CRUDtree
 
     def parents
       [find_parent(self)].flatten[0..-2]
+    end
+
+    def stems
+      leafs.select{|leaf| leaf.class == Stem}
+    end
+
+    def parent_is_trunk?
+      ! parent.respond_to? :parent
     end
 
     private

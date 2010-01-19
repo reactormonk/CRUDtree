@@ -3,10 +3,8 @@ module CRUDtree
     def initialize(trunk)
       @trunk = trunk
       @model_to_stem = {}
-      walk_tree_for_models
+      @trunk.stems.each {|stem| add_stem_models(stem) }
     end
-
-    attr_reader :model_to_stem
 
     def generate(resource, call = nil)
       route = compile_route_from_stem(find_stem(resource))
@@ -15,43 +13,44 @@ module CRUDtree
 
     private
     def find_stem(resource)
-      case stems = @model_to_stem[resource]
+      case stems = @model_to_stem[resource.class]
       when Stem
         stems
       when Array
-        valid_stem = stems.select {|stem| valid_model_for_stem?(resource, stem)}
-        raise(NoUniqueStem, "No unique stem found for #{resource}.") unless valid_stem.size == 1
-        raise(NoStem, "No stem found for #{resource}.") if valid_stem.size == 1
-        valid_stem.first
+        valid_stems = stems.select {|stem| valid_model_for_stem?(resource, stem)}
+        parents = valid_stems.map{|stem| stem.parents}.flatten
+        valid_stems.reject!{|stem| parents.include?(stem)}
+        case valid_stems.size
+        when (2..1/0.0)
+          raise(NoUniqueStem, "No unique stem found for #{resource}.")
+        when 0
+          raise(NoStem, "No stem found for #{resource}.") if valid_stems.size == 1
+        else
+          valid_stems.first
+        end
       end
-    end
-
-
-    def walk_tree_for_models
-      @trunk.stems.each {|stem| add_stem_models(stem) }
     end
 
     def add_stem_models(stem)
       @model_to_stem[stem.model] = if target_stem = @model_to_stem[stem.model]
-                                     [target_stem + stem].flatten
+                                     ([target_stem] << stem).flatten
                                    else
                                      stem
                                    end
-      stem.branches.each { |leaf|
-        add_stem_models(leaf) if leaf.class == Stem
+      stem.stems.each { |leaf|
+        add_stem_models(leaf)
       }
     end
 
     def compile_route_from_stem(stem)
-      path = ""
-      stem.parents.each {|parent|
-        path << "/#{stem.paths.first}/:#{stem.identifier}"
-      }
+      (stem.parents.reverse + [stem]).map {|parent|
+        "/#{parent.paths.first}/:#{parent.identifier}"
+      }.join
     end
 
     def valid_model_for_stem?(model, stem)
       return false unless stem.model == model.class
-      if stem.parent.respond_to? :parent
+      unless stem.parent_is_trunk?
         valid_model_for_stem?(model.send(stem.parent_call), stem.parent)
       else
         true
