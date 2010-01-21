@@ -18,7 +18,7 @@ module CRUDtree
         nodes
       when Array
         valid_nodes = nodes.select {|node| valid_model_for_node?(resource, node)}
-        parents = valid_nodes.map{|node| node.parents}.flatten
+        parents = valid_nodes.map(&:parents).flatten
         valid_nodes.reject!{|node| parents.include?(node)}
         case valid_nodes.size
         when (2..1/0.0)
