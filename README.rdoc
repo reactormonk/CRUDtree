@@ -13,9 +13,9 @@ Baretest:: http://github.com/apeiros/baretest
 
 == Terminology
 
-Trunk:: The main body, only one per Usher instance as well.
-Stem:: You attach other Stems or Leafs as branches here.
-Leaf:: A route endpoint.
+Master:: The main body, only one per Usher instance as well.
+Node:: You attach other Nodes or EndNodes as subnodes here.
+EndNode:: A route endpoint.
 
 == Usage
 
@@ -24,9 +24,9 @@ Leaf:: A route endpoint.
   CRUDtree::Interface.for(:usher_rack, rango: true).add_helper(CRUDtree::Interface::Helper)
   
   Usher::Interface.for(:rack) do
-    stem(klass: Posts) do
-      branch(type: :member, call: :show, rest: :get)
-      branch(type: :collection, call: :index, rest: :get)
+    node(klass: Posts) do
+      sub(type: :member, call: :show, rest: :get)
+      sub(type: :collection, call: :index, rest: :get)
     end
   end
 

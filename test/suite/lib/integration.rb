@@ -21,7 +21,7 @@ BareTest.suite do
         end
 
         assert "the module gets included and the methods are avaible" do
-          Usher::Interface.class_for(:rack).new.respond_to? :stem
+          Usher::Interface.class_for(:rack).new.respond_to? :node
         end
 
       end

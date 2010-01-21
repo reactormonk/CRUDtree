@@ -1,5 +1,5 @@
 module CRUDtree
-  class Stem
+  class Node
     # The params Hash takes the following keys:
     #
     # :klass
@@ -45,18 +45,18 @@ module CRUDtree
                else
                 raise ArgumentError, "No paths given"
                end
-      @leafs = []
+      @subnodes = []
       @parent = parent
       # default routes
-      @leafs.unshift(Leaf.new(self, type: :member, call: :show, path: "", rest: :get))
-      @leafs.unshift(Leaf.new(self, type: :collection, call: :index, path: "", rest: :get))
+      @subnodes.unshift(EndNode.new(self, type: :member, call: :show, path: "", rest: :get))
+      @subnodes.unshift(EndNode.new(self, type: :collection, call: :index, path: "", rest: :get))
       # generating
       unless @model = params[:model]
         raise(ArgumentError, "No model given.")
       end
       @parent_call =  if params[:parent_call]
                         params[:parent_call]
-                      elsif ! parent_is_trunk?
+                      elsif ! parent_is_master?
                         parent.model.to_s.split('::').last.downcase
                       else
                         nil
@@ -64,43 +64,47 @@ module CRUDtree
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
-    attr_reader :klass, :identifier, :default_collection, :default_member, :paths, :parent, :leafs, :model, :parent_call
+    attr_reader :klass, :identifier, :default_collection, :default_member, :paths, :parent, :subnodes, :model, :parent_call
 
-    # Creates a new Leaf and attaches it to this Stem.
-    def branch(params)
-      @leafs << Leaf.new(self, params)
+    # Creates a new End and attaches it to this Node.
+    def endnode(params)
+      @subnodes << EndNode.new(self, params)
     end
 
-    # Creates a new leaf with type member. See Leaf.
+    # Creates a new endnode with type member. See Endnode.
     def member(params)
-      branch(params.merge({type: :member}))
+      endnode(params.merge({type: :member}))
     end
 
-    # Creates a new leaf with type collection. See Leaf.
+    # Creates a new endnode with type collection. See EndNode.
     def collection(params)
-      branch(params.merge({type: :collection}))
+      endnode(params.merge({type: :collection}))
     end
 
-    def stem(params, &block)
-      @leafs << Stem.new(self, params, &block)
+    def node(params, &block)
+      @subnodes << Node.new(self, params, &block)
     end
 
     def parents
       [find_parent(self)].flatten[0..-2]
     end
 
-    def stems
-      leafs.select{|leaf| leaf.class == Stem}
+    def nodes
+      subnodes.select{|subnode| subnode.is_a? Node}
     end
 
-    def parent_is_trunk?
+    def endnodes
+      subnodes.select{|subnode| subnode.is_a? EndNode}
+    end
+
+    def parent_is_master?
       ! parent.respond_to? :parent
     end
 
     private
-    def find_parent(stem)
-      if stem.parent.respond_to? :parent
-        [stem.parent, find_parent(stem.parent)]
+    def find_parent(node)
+      if node.parent.respond_to? :parent
+        [node.parent, find_parent(node.parent)]
       end
     end
   end

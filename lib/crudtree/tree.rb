@@ -1,3 +1,3 @@
-require_relative 'tree/trunk'
-require_relative 'tree/stem'
-require_relative 'tree/leaf'
+require_relative 'tree/master'
+require_relative 'tree/node'
+require_relative 'tree/endnode'

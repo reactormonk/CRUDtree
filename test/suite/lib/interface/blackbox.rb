@@ -4,7 +4,7 @@ BareTest.suite "CRUDtree" do
 
     setup :tree, "a simple tree" do
       @block = proc {
-        stem(model: Object, klass: TestObj0) do
+        node(model: Object, klass: TestObj0) do
           collection(call: :index, rest: :get)
         end
       }
@@ -15,8 +15,8 @@ BareTest.suite "CRUDtree" do
 
      setup :tree, "a nested tree" do
       @block = proc {
-        stem(model: Object, klass: TestObj0) do
-          stem(model: Object, klass: TestObj1) do
+        node(model: Object, klass: TestObj0) do
+          node(model: Object, klass: TestObj1) do
             member(call: :show, rest: :get)
           end
         end
@@ -28,9 +28,9 @@ BareTest.suite "CRUDtree" do
 
      setup :tree, "a twice nested tree" do
       @block = proc {
-        stem(model: Object, klass: TestObj0) do
-          stem(model: Object, klass: TestObj1) do
-            stem(model: Object, klass: TestObj2) do
+        node(model: Object, klass: TestObj0) do
+          node(model: Object, klass: TestObj1) do
+            node(model: Object, klass: TestObj2) do
               collection(call: :create, rest: :post)
             end
           end
@@ -41,9 +41,9 @@ BareTest.suite "CRUDtree" do
       default_routes(2)
      end
 
-     setup :tree, "a tree with some leafs" do
+     setup :tree, "a tree with some subnodes" do
       @block = proc {
-        stem(model: Object, klass: TestObj0) do
+        node(model: Object, klass: TestObj0) do
           collection(call: :index, rest: :get)
           member(call: :show, rest: :get)
           member(call: :update, path: "edit", rest: :put)
@@ -56,11 +56,11 @@ BareTest.suite "CRUDtree" do
       default_routes
      end
 
-     setup :tree, "a nested tree with some leafs" do
+     setup :tree, "a nested tree with some subnodes" do
       @block = proc {
-        stem(model: Object, klass: TestObj0) do
+        node(model: Object, klass: TestObj0) do
           member(call: :show, rest: :get)
-          stem(model: Object, klass: TestObj1) do
+          node(model: Object, klass: TestObj1) do
             collection(call: :index, rest: :get)
             member(call: :show, rest: :get)
             member(call: :update, path: "edit", rest: :put)
@@ -77,7 +77,7 @@ BareTest.suite "CRUDtree" do
 
      setup :tree, "a tree with multiple paths" do
       @block = proc {
-        stem(model: Object, paths: ["test", "foo", "bar"], klass: TestObj0) do
+        node(model: Object, paths: ["test", "foo", "bar"], klass: TestObj0) do
           collection(call: :index, rest: :get)
         end
       }
@@ -95,9 +95,9 @@ BareTest.suite "CRUDtree" do
 
      setup :tree, "a nested tree with multiple paths" do
       @block = proc {
-        stem(model: Object, paths: ["foo", "bar"], klass: TestObj0) do
+        node(model: Object, paths: ["foo", "bar"], klass: TestObj0) do
           collection(call: :index, rest: :get)
-          stem(model: Object, paths: ["test", "baz"], klass: TestObj1) do
+          node(model: Object, paths: ["test", "baz"], klass: TestObj1) do
             member(call: :edit, rest: :get)
           end
         end

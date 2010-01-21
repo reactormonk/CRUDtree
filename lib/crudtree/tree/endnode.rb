@@ -1,12 +1,12 @@
 module CRUDtree
-  class Leaf
+  class EndNode
     # The params Hash takes the following keys:
     #
     # :type
     # may either be member or collection
     #
     # :path
-    # path to this leaf - you can use 
+    # path to this endnode - you can use 
     # join
     # or
     # join/:date/:foo/:whatever

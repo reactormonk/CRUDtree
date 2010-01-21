@@ -25,57 +25,57 @@ BareTest.suite "CRUDtree" do
 
         suite "#compile_path" do
 
-          setup :leaf, "a simple member leaf" do
+          setup :subnode, "a simple member subnode" do
             @pre_path = ""
-            @stem = OpenStruct.new(klass: TestObj, identifier: :id, paths: "testobj")
-            @leaf = Leaf.new(@stem, type: :member, call: :foo, name: "foo")
+            @node = OpenStruct.new(klass: TestObj, identifier: :id, paths: "testobj")
+            @subnode = EndNode.new(@node, type: :member, call: :foo, name: "foo")
             @path = "/testobj/:id/foo"
             @params = {conditions: {}}
             @send = [:foo]
-            @trunk_params = {}
+            @master_params = {}
           end
 
-          setup :leaf, "a more complex collection leaf" do
+          setup :subnode, "a more complex collection subnode" do
             @pre_path = "/bar"
-            @stem = OpenStruct.new(klass: TestObj, identifier: :id, paths: "testobj")
-            @leaf = Leaf.new(@stem, type: :collection, call: :foo, name: "foo")
+            @node = OpenStruct.new(klass: TestObj, identifier: :id, paths: "testobj")
+            @subnode = EndNode.new(@node, type: :collection, call: :foo, name: "foo")
             @path = "/bar/testobj/foo"
             @params = {conditions: {}}
             @send = [:dispatcher, :foo]
-            @trunk_params = {rango: true}
+            @master_params = {rango: true}
           end
 
-          setup :leaf, "a nested collection leaf" do
+          setup :subnode, "a nested collection subnode" do
             @pre_path = ""
-            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1", model: Object){:foo}
-            @stem2 = Stem.new(@stem1, klass: TestObj, model: Object){:foo}
-            @leaf = Leaf.new(@stem2, type: :collection, call: :foo, name: "foo", model: Object)
+            @node1 = Node.new(nil, klass: Cont1, identifier: :id, paths: "cont1", model: Object){:foo}
+            @node2 = Node.new(@node1, klass: TestObj, model: Object){:foo}
+            @subnode = EndNode.new(@node2, type: :collection, call: :foo, name: "foo", model: Object)
             @path = "/cont1/:id/testobj/foo"
             @params = {conditions: {}}
             @send = [:dispatcher, :foo]
-            @trunk_params = {rango: true}
+            @master_params = {rango: true}
           end
 
-          setup :leaf, "a nested member leaf" do
+          setup :subnode, "a nested member subnode" do
             @pre_path = ""
-            @stem1 = Stem.new(nil, klass: Cont1, identifier: :id, paths: "cont1", model: Object){:foo}
-            @stem2 = Stem.new(@stem1, klass: TestObj, model: Object){:foo}
-            @leaf = Leaf.new(@stem2, type: :member, call: :foo, name: "foo")
+            @node1 = Node.new(nil, klass: Cont1, identifier: :id, paths: "cont1", model: Object){:foo}
+            @node2 = Node.new(@node1, klass: TestObj, model: Object){:foo}
+            @subnode = EndNode.new(@node2, type: :member, call: :foo, name: "foo")
             @path = "/cont1/:id/testobj/:id/foo"
             @params = {conditions: {}}
             @send = [:foo]
-            @trunk_params = {}
+            @master_params = {}
           end
 
           setup :foo, "Foo" do
             TestObj.expects(:send).with(*@send).returns(:yeah)
             TestObj2.any_instance.expects(:to).with(:yeah)
-            CRUDtree::Interface::Usher::Rack.expects(:trunk_params).returns(@trunk_params)
+            CRUDtree::Interface::Usher::Rack.expects(:master_params).returns(@master_params)
             CRUDtree::Interface::Usher::Rack.expects(:path).with(@path, @params).returns(TestObj2.new)
           end
 
-          assert "compilaton with :leaf" do
-            CRUDtree::Interface::Usher::Rack.compile_path(@pre_path, @leaf)
+          assert "compilaton with :subnode" do
+            CRUDtree::Interface::Usher::Rack.compile_path(@pre_path, @subnode)
             true
           end
 

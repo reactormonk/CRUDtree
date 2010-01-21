@@ -2,7 +2,7 @@ require 'crudtree/interface/usher'
 require 'ostruct'
 
 module CRUDtree::Interface::Usher
-  public :compile_branch, :compile_stem
+  public :compile_subnode, :compile_node
   extend self
 end
 
@@ -12,37 +12,38 @@ BareTest.suite "CRUDtree" do
 
     suite "usher" do
 
-      suite "#compile_branch" do
+      suite "#compile_subnode" do
 
-        setup :branch, "Stem" do
+        setup :subnode, "Node" do
           @pre_path = "/foo"
-          @branch = Stem.new(nil, klass: Object, paths: "foo", model: Object) {:foo}
-          CRUDtree::Interface::Usher.expects(:compile_stem).with("/foo/:id", @branch).returns(true)
+          @subnode = Node.new(nil, klass: Object, paths: "foo", model: Object) {:foo}
+          CRUDtree::Interface::Usher.expects(:compile_node).with("/foo/:id", @subnode).returns(true)
         end
 
-        setup :branch, "Leaf" do
+        setup :subnode, "EndNode" do
           @pre_path = ""
-          @branch = Leaf.allocate
-          CRUDtree::Interface::Usher.expects(:compile_leaf).with(@pre_path, @branch).returns(true)
+          @subnode = EndNode.allocate
+          CRUDtree::Interface::Usher.expects(:compile_subnode).with(@pre_path, @subnode).returns(true)
         end
 
-        assert "Compilation with a :branch as branch" do
-          CRUDtree::Interface::Usher.compile_branch(@pre_path, @branch)
+        assert "Compilation with a :subnode as subnode" do
+          CRUDtree::Interface::Usher.compile_subnode(@pre_path, @subnode)
         end
 
       end
 
-      suite "#compile_stem" do
+      suite "#compile_node" do
 
         setup do
-          @leaf = Object.new
-          @pre_paths = ["", "/baz"]
-          @stem = OpenStruct.new(paths: ["foo", "bar"], leafs: [@leaf])
-          CRUDtree::Interface::Usher.expects(:compile_leaf).with(["/foo", "/bar", "/baz/foo", "/baz/bar"], @stem).returns(true)
+          @subnode = Object.new
+          @pre_path = "/baz"
+          @node = OpenStruct.new(paths: ["foo", "bar"], subnodes: [@subnode])
+          CRUDtree::Interface::Usher.expects(:compile_subnode).with("/baz/foo", @subnode).returns(true)
+          CRUDtree::Interface::Usher.expects(:compile_subnode).with("/baz/bar", @subnode).returns(true)
         end
 
         assert "compilation" do
-          CRUDtree::Interface::Usher.compile_stem(@pre_paths, @stem)
+          CRUDtree::Interface::Usher.compile_node(@pre_path, @node)
         end
 
       end

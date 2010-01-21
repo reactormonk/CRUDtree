@@ -2,7 +2,7 @@ BareTest.suite "CRUDtree" do
 
   suite "tree" do
 
-    suite "trunk"
+    suite "master"
 
   end
 

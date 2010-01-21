@@ -1,18 +1,18 @@
 module CRUDtree
-  class Trunk
+  class Master
 
     # Use :rango => true if you're using rango
     def initialize(params = {})
-      @stems = []
+      @nodes = []
       @params = params
     end
 
-    attr_reader :stems, :params
+    attr_reader :nodes, :params
     attr_accessor :mapping
 
-    def stem(params, &block)
-      @stems << new_stem = Stem.new(self, params, &block)
-      new_stem
+    def node(params, &block)
+      @nodes << new_node = Node.new(self, params, &block)
+      new_node
     end
   end
 end

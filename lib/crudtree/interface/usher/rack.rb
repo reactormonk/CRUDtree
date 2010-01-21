@@ -15,20 +15,20 @@ module CRUDtree
         end
 
         private
-        def compile_leaf(pre_path, leaf)
+        def compile_endnode(pre_path, endnode)
           conditions = {}
-          conditions.merge!({request_method: leaf.rest.to_s.upcase}) if leaf.rest
-          method_call = [leaf.call]
-          method_call.unshift(:dispatcher) if trunk_params[:rango]
+          conditions.merge!({request_method: endnode.rest.to_s.upcase}) if endnode.rest
+          method_call = [endnode.call]
+          method_call.unshift(:dispatcher) if master_params[:rango]
           # Here we call usher.
-          path(compile_path(pre_path, leaf), conditions: conditions).to(leaf.parent.klass.send(*method_call))
+          path(compile_path(pre_path, endnode), conditions: conditions).to(endnode.parent.klass.send(*method_call))
         end
 
-        def compile_path(pre_path, leaf)
-          stem = leaf.parent
+        def compile_path(pre_path, endnode)
+          node = endnode.parent
           compiled_path = [pre_path]
-          compiled_path << ":#{stem.identifier}" if leaf.type == :member
-          compiled_path << "#{leaf.path}" unless leaf.path.empty?
+          compiled_path << ":#{node.identifier}" if endnode.type == :member
+          compiled_path << "#{endnode.path}" unless endnode.path.empty?
           compiled_path.join('/')
         end
 

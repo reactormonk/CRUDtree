@@ -1,63 +1,63 @@
 module CRUDtree
   class Generator
-    def initialize(trunk)
-      @trunk = trunk
-      @model_to_stem = {}
-      @trunk.stems.each {|stem| add_stem_models(stem) }
+    def initialize(master)
+      @master = master
+      @model_to_node = {}
+      @master.nodes.each {|node| add_node_models(node) }
     end
 
     def generate(resource, call = nil)
-      route = compile_route_from_stem(find_stem(resource))
-      # TODO now leaf
+      route = compile_route_from_node(find_node(resource))
+      # TODO now subnode
     end
 
     private
-    def find_stem(resource)
-      case stems = @model_to_stem[resource.class]
-      when Stem
-        stems
+    def find_node(resource)
+      case nodes = @model_to_node[resource.class]
+      when Node
+        nodes
       when Array
-        valid_stems = stems.select {|stem| valid_model_for_stem?(resource, stem)}
-        parents = valid_stems.map{|stem| stem.parents}.flatten
-        valid_stems.reject!{|stem| parents.include?(stem)}
-        case valid_stems.size
+        valid_nodes = nodes.select {|node| valid_model_for_node?(resource, node)}
+        parents = valid_nodes.map{|node| node.parents}.flatten
+        valid_nodes.reject!{|node| parents.include?(node)}
+        case valid_nodes.size
         when (2..1/0.0)
-          raise(NoUniqueStem, "No unique stem found for #{resource}.")
+          raise(NoUniqueNode, "No unique node found for #{resource}.")
         when 0
-          raise(NoStem, "No stem found for #{resource}.") if valid_stems.size == 1
+          raise(NoNode, "No node found for #{resource}.") if valid_nodes.size == 1
         else
-          valid_stems.first
+          valid_nodes.first
         end
       end
     end
 
-    def add_stem_models(stem)
-      @model_to_stem[stem.model] = if target_stem = @model_to_stem[stem.model]
-                                     ([target_stem] << stem).flatten
+    def add_node_models(node)
+      @model_to_node[node.model] = if target_node = @model_to_node[node.model]
+                                     ([target_node] << node).flatten
                                    else
-                                     stem
+                                     node
                                    end
-      stem.stems.each { |leaf|
-        add_stem_models(leaf)
+      node.nodes.each { |subnode|
+        add_node_models(subnode)
       }
     end
 
-    def compile_route_from_stem(stem)
-      (stem.parents.reverse + [stem]).map {|parent|
+    def compile_route_from_node(node)
+      (node.parents.reverse + [node]).map {|parent|
         "/#{parent.paths.first}/:#{parent.identifier}"
       }.join
     end
 
-    def valid_model_for_stem?(model, stem)
-      return false unless stem.model == model.class
-      unless stem.parent_is_trunk?
-        valid_model_for_stem?(model.send(stem.parent_call), stem.parent)
+    def valid_model_for_node?(model, node)
+      return false unless node.model == model.class
+      unless node.parent_is_master?
+        valid_model_for_node?(model.send(node.parent_call), node.parent)
       else
         true
       end
     end
   end
 
-  class NoUniqueStem < StandardError; end
-  class NoStem < StandardError; end
+  class NoUniqueNode < StandardError; end
+  class NoNode < StandardError; end
 end
