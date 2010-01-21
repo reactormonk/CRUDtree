@@ -5,7 +5,7 @@ BareTest.suite do
 
     suite "Generator" do
 
-      suite "#compile_route_from_node" do
+      suite "#generate_url_from_node" do
 
         setup :node, "a simple node" do
           @node = Node.new(nil, :paths => ["foo"], klass: Object, model: Object ){:foo}
@@ -24,7 +24,7 @@ BareTest.suite do
         end
 
         assert ":node goes to the right path" do
-          equal(@path, CRUDtree::Generator.allocate.send(:compile_route_from_node, @node))
+          equal(@path, CRUDtree::Generator.allocate.send(:generate_url_from_node, @node))
         end
 
       end
@@ -144,6 +144,31 @@ BareTest.suite do
             same(@node, @generator.send(:find_node, @resource))
           end
 
+        end
+
+      end
+
+      suite "#generate_from_sub" do
+
+        setup do
+          @foo = OpenStruct.new(:name => :foo, :path => "foo")
+          @bar = OpenStruct.new(:name => :bar, :path => "bar")
+        end
+
+        setup :names, "one name" do
+          @node = OpenStruct.new(:subs => [@foo, @bar])
+          @names = [:foo]
+          @path = "/foo"
+        end
+
+        setup :names, "stacked names" do
+          @node = OpenStruct.new(:subs => [OpenStruct.new(:subs => [@foo, @bar], :name => :foo, :path => "foo"), @bar])
+          @names = [:foo, :bar]
+          @path = "/foo/bar"
+        end
+
+        assert "generates the correct url from :names" do
+          equal @path, Generator.allocate.send(:generate_from_sub, @node, @names)
         end
 
       end

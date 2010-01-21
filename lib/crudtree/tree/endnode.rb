@@ -21,6 +21,8 @@ module CRUDtree
     #
     # :name
     # The name of this route, used for generating. Symbol.
+    # Defaults to call
+    # 
     def initialize(parent, params)
       @type = params[:type] if [:member, :collection].include? params[:type]
       raise ArgumentError, "Invalid type: #{params[:type]}" unless @type
@@ -28,7 +30,7 @@ module CRUDtree
       @path = params[:path] || @call.to_s
       raise ArgumentError, "No path given." unless @path
       @rest = params[:rest]
-      @name = params[:name]
+      @name = params[:name] || @call
       @parent = parent
     end
 

@@ -6,9 +6,16 @@ module CRUDtree
       @master.nodes.each {|node| add_node_models(node) }
     end
 
-    def generate(resource, call = nil)
-      route = compile_route_from_node(find_node(resource))
-      # TODO now subnode
+    def generate(resource, *names)
+      if resource.is_a? Symbol
+        node = @master
+        url = ""
+      else
+        node = find_node(resource)
+        url = generate_url_from_node(node)
+      end
+      url << generate_from_sub(node, names) unless names.empty?
+      url
     end
 
     private
@@ -42,9 +49,9 @@ module CRUDtree
       }
     end
 
-    def compile_route_from_node(node)
+    def generate_url_from_node(node)
       (node.parents.reverse + [node]).map {|parent|
-        "/#{parent.paths.first}/:#{parent.identifier}"
+        "/#{parent.path}/:#{parent.identifier}"
       }.join
     end
 
@@ -55,6 +62,14 @@ module CRUDtree
       else
         true
       end
+    end
+
+    def generate_from_sub(node, names)
+      name = names.shift
+      sub = node.subs.find{|sub| sub.name == name} or raise(ArgumentError, "No subnode found on #{node} with name of #{name}.")
+      url = "/#{sub.path}"
+      url << generate_from_sub(sub, names) unless names.empty?
+      url
     end
   end
 

@@ -33,6 +33,10 @@ module CRUDtree
     # The method to call on the model object to get its parent (for nested
     # resources). Defaults to :model.downcase of the parent.
     #
+    # :name
+    # Symbol used to identify the node when generating a collection route.
+    # Defaults to Klass.to_s.downcase.to_sym
+    #
     def initialize(parent, params, &block)
       @klass = params[:klass]
       @identifier = params[:identifier] || :id
@@ -61,6 +65,7 @@ module CRUDtree
                       else
                         nil
                       end
+      @name = params[:name] || klass.to_s.downcase.to_sym
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
@@ -99,6 +104,11 @@ module CRUDtree
 
     def parent_is_master?
       ! parent.respond_to? :parent
+    end
+
+    # Duck typing used for generation
+    def path
+      @paths.first
     end
 
     private
