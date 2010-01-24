@@ -69,7 +69,7 @@ module CRUDtree
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 
-    attr_reader :klass, :identifier, :default_collection, :default_member, :paths, :parent, :subnodes, :model, :parent_call
+    attr_reader :klass, :identifier, :default_collection, :default_member, :paths, :parent, :subnodes, :model, :parent_call, :name
 
     # Creates a new End and attaches it to this Node.
     def endnode(params)

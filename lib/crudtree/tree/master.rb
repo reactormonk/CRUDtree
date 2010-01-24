@@ -10,6 +10,8 @@ module CRUDtree
     attr_reader :nodes
     attr_accessor :mapping, :params
 
+    alias_method :subs, :nodes
+
     def node(params, &block)
       @nodes << new_node = Node.new(self, params, &block)
       new_node

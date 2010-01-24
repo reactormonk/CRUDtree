@@ -8,6 +8,7 @@ module CRUDtree
 
     def generate(resource, *names)
       if resource.is_a? Symbol
+        names << resource
         node = @master
         url = ""
       else
