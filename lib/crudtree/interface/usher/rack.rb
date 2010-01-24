@@ -19,7 +19,7 @@ module CRUDtree
           conditions = {}
           conditions.merge!({request_method: endnode.rest.to_s.upcase}) if endnode.rest
           method_call = [endnode.call]
-          method_call.unshift(:dispatcher) if master_params[:rango]
+          method_call.unshift(master_params[:dispatcher])
           # Here we call usher.
           path(compile_path(pre_path, endnode), conditions: conditions).to(endnode.parent.klass.send(*method_call))
         end

@@ -4,11 +4,11 @@ module CRUDtree
     # Use :rango => true if you're using rango
     def initialize(params = {})
       @nodes = []
-      @params = params
+      @params = {dispatcher: :dispatcher}.merge(params)
     end
 
-    attr_reader :nodes, :params
-    attr_accessor :mapping
+    attr_reader :nodes
+    attr_accessor :mapping, :params
 
     def node(params, &block)
       @nodes << new_node = Node.new(self, params, &block)

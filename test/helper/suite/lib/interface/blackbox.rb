@@ -1,5 +1,5 @@
 def results_in(path, klass, call, params)
-  klass.expects(call).returns(:yeah!)
+  klass.expects(:dispatcher).with(call).returns(:yeah!)
   to_mock = mock('to')
   to_mock.expects(:to).with(:yeah!).returns(true)
   Usher::Interface.class_for(:rack).any_instance.expects(:path).with(path, params).returns(to_mock)
