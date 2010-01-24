@@ -29,12 +29,12 @@ module CRUDtree
         parents = valid_nodes.map(&:parents).flatten
         valid_nodes.reject!{|node| parents.include?(node)}
         case valid_nodes.size
-        when (2..1/0.0)
-          raise(NoUniqueNode, "No unique node found for #{resource}.")
+        when 1
+          valid_nodes.first
         when 0
           raise(NoNode, "No node found for #{resource}.") if valid_nodes.size == 1
         else
-          valid_nodes.first
+          raise(NoUniqueNode, "No unique node found for #{resource}.")
         end
       end
     end
