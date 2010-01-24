@@ -1,16 +1,18 @@
 module CRUDtree
   module Interface
     module Helper
-      def resource(params, &block)
-        resource_node = node(params, &block)
-        resource_node.collection(call: :index, rest: :get)
-        resource_node.collection(call: :new, rest: :get)
-        resource_node.collection(call: :create, rest: :post, path: "")
-        resource_node.member(call: :show, rest: :get)
-        resource_node.member(call: :edit, rest: :get)
-        resource_node.member(call: :update, rest: :put, path: "")
-        resource_node.member(call: :delete, rest: :get)
-        resource_node.member(call: :destroy, rest: :delete, path: "")
+      def resource(params, &resource_block)
+        node(params) do
+          collection(call: :index, rest: :get)
+          collection(call: :new, rest: :get)
+          collection(call: :create, rest: :post, path: "")
+          member(call: :show, rest: :get)
+          member(call: :edit, rest: :get)
+          member(call: :update, rest: :put, path: "")
+          member(call: :delete, rest: :get)
+          member(call: :destroy, rest: :delete, path: "")
+          eval(&resource_block) if resource_block
+        end
       end
     end
   end
