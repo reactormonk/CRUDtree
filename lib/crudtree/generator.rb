@@ -12,8 +12,8 @@ module CRUDtree
         node = @master
         url = ""
       else
-        node = find_node(resource)
-        url = generate_url_from_node(node)
+        node, identifiers = find_node(resource)
+        url = generate_url_from_node(node, identifiers)
       end
       url << generate_from_sub(node, names) unless names.empty?
       url
@@ -25,14 +25,18 @@ module CRUDtree
       when Node
         nodes
       when Array
-        valid_nodes = nodes.select {|node| valid_model_for_node?(resource, node)}
-        parents = valid_nodes.map(&:parents).flatten
-        valid_nodes.reject!{|node| parents.include?(node)}
+        valid_nodes = {}
+        nodes.each do |node|
+          identifiers = identifiers_to_node(resource, node)
+          valid_nodes[node] = identifiers if identifiers
+        end
+        parents = valid_nodes.keys.map(&:parents).flatten
+        valid_nodes.reject!{|node, identifiers| parents.include?(node)}
         case valid_nodes.size
         when 1
           valid_nodes.first
         when 0
-          raise(NoNode, "No node found for #{resource}.") if valid_nodes.size == 1
+          raise(NoNode, "No node found for #{resource}.")
         else
           raise(NoUniqueNode, "No unique node found for #{resource}.")
         end
@@ -50,19 +54,21 @@ module CRUDtree
       }
     end
 
-    def generate_url_from_node(node)
+    def generate_url_from_node(node, identifiers)
       (node.parents.reverse + [node]).map {|parent|
-        "/#{parent.path}/:#{parent.identifier}"
+        "/#{parent.path}/#{identifiers.shift}"
       }.join
     end
 
-    def valid_model_for_node?(model, node)
+    # @return [Array] with [String] of identifiers or false if the model is invalid
+    #         for this node
+    def identifiers_to_node(model, node, identifiers = [])
       return false unless node.model == model.class
+      identifiers << model.send(node.identifier).to_s
       unless node.parent_is_master?
-        valid_model_for_node?(model.send(node.parent_call), node.parent)
-      else
-        true
+        identifiers_to_node(model.send(node.parent_call), node.parent, identifiers) or return false
       end
+      identifiers.reverse
     end
 
     def generate_from_sub(node, names)
@@ -74,6 +80,7 @@ module CRUDtree
     end
   end
 
+  class InvalidPath < StandardError; end
   class NoUniqueNode < StandardError; end
   class NoNode < StandardError; end
 end

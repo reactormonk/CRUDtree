@@ -9,7 +9,8 @@ BareTest.suite do
 
         setup :node, "a simple node" do
           @node = Node.new(nil, :paths => ["foo"], klass: Object, model: Object ){:foo}
-          @path = "/foo/:id"
+          @path = "/foo/23"
+          @identifiers = [23]
         end
 
         setup :node, "a node with multiple parents" do
@@ -20,11 +21,12 @@ BareTest.suite do
             end
           end
           @node = master.nodes.first.nodes.first.nodes.first
-          @path = "/foo/:id/bar/:id/baz/:id"
+          @path = "/foo/1/bar/2/baz/3"
+          @identifiers = [1,2,3]
         end
 
         assert ":node goes to the right path" do
-          equal(@path, CRUDtree::Generator.allocate.send(:generate_url_from_node, @node))
+          equal(@path, CRUDtree::Generator.allocate.send(:generate_url_from_node, @node, @identifiers))
         end
 
       end
@@ -82,7 +84,7 @@ BareTest.suite do
           setup :master, "a simple master" do
             @node = @master.node(klass: Klass0, model: Model0){:foo}
             @resource = Model0.new
-            @valid = [[Model0.new, @node]]
+            @valid = [[Model0.new, @node, ["0"]]]
             @invalid = [[Model2.new, @node], [Model1.new, @node]]
           end
 
@@ -93,18 +95,18 @@ BareTest.suite do
             end
             @node = @master.nodes.first.nodes.last
             @resource = Model2.new
-            @valid = [[Model2.new, @node], [Model0.new, @master.nodes.first]]
+            @valid = [[Model2.new, @node, ["0","2"]], [Model0.new, @master.nodes.first, ["0"]]]
             @invalid = [[Model0.new, @node], [Model1.new, @node]]
           end
 
-          assert "#valid_model_for_node? is valid with :master" do
+          assert "#identifiers_returns the corret identifiers with :master" do
             generator = CRUDtree::Generator.new(@master)
-            @valid.all?{|model, node| generator.send(:valid_model_for_node?, model, node)}
+            @valid.all?{|model, node, ary| generator.send(:identifiers_to_node, model, node) == ary}
           end
 
-          assert "#valid_model_for_node? invalid with :master" do
+          assert "#identifiers returns false invalid with :master" do
             generator = CRUDtree::Generator.new(@master)
-            @invalid.all?{|model, node| ! generator.send(:valid_model_for_node?, model, node)}
+            @invalid.all?{|model, node| ! generator.send(:identifiers_to_node, model, node)}
           end
 
           assert "#find_node gets the correct node from :master" do
@@ -129,19 +131,21 @@ BareTest.suite do
           setup :node, "nested node" do
             @node = @master.nodes.first.nodes.last.nodes.first
             @resource = Mod2.new(Mod2)
+            @identifier = %w(0 2 2)
           end
 
           setup :node, "first node" do
             @node = @master.nodes.first.nodes.last
             @resource = Mod2.new(Mod0)
+            @identifier = %w(0 2)
           end
 
-          assert "#valid_model_for_node? returns true for the :node" do
-            @generator.send(:valid_model_for_node?, @resource, @node)
+          assert "#identifiers_to_node returns an Array of identifiers for the :node" do
+            equal(@identifier, @generator.send(:identifiers_to_node, @resource, @node))
           end
 
-          assert "#find_node gets the right model for the :node" do
-            same(@node, @generator.send(:find_node, @resource))
+          assert "#find_node gets :node based on the model" do
+            same(@node, @generator.send(:find_node, @resource).first)
           end
 
         end
