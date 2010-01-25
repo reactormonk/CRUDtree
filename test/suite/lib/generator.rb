@@ -110,7 +110,7 @@ BareTest.suite do
           end
 
           assert "#find_node gets the correct node from :master" do
-            same(@node, CRUDtree::Generator.new(@master).send(:find_node, @resource))
+            same(@node, CRUDtree::Generator.new(@master).send(:find_node, @resource).first)
           end
 
         end
@@ -173,6 +173,40 @@ BareTest.suite do
 
         assert "generates the correct url from :names" do
           equal @path, Generator.allocate.send(:generate_from_sub, @node, @names)
+        end
+
+      end
+
+      suite "blackbox" do
+
+        setup do
+          @master = Master.new
+          @master.node(klass: Klass0, model: Mod0) do
+            node(klass: Klass1, model: Mod1){:foo}
+            node(klass: Klass2, model: Mod2) do
+              node(klass: Klass2, model: Mod2){:foo}
+            end
+          end
+          @generator = CRUDtree::Generator.new(@master)
+        end
+
+        setup :model, "model for the nested node" do
+          @resource = Mod2.new(Mod2)
+          @path = "/klass0/0/klass2/2/klass2/2"
+        end
+
+        setup :model, "model for the first node" do
+          @resource = Mod2.new(Mod0)
+          @path = "/klass0/0/klass2/2"
+        end
+
+        setup :model, "model for the simplest node" do
+          @resource = Mod0.new
+          @path = "/klass0/0"
+        end
+
+        assert "#generate" do
+          equal(@path, @generator.generate(@resource))
         end
 
       end

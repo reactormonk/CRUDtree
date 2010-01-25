@@ -23,7 +23,7 @@ module CRUDtree
     def find_node(resource)
       case nodes = @model_to_node[resource.class]
       when Node
-        nodes
+        [nodes, [resource.send(nodes.identifier)]]
       when Array
         valid_nodes = {}
         nodes.each do |node|
