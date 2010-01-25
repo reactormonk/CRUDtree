@@ -21,9 +21,10 @@ EndNode:: A route endpoint.
 
 === as Tinkerer
 
-  CRUDtree::Interface.for(:usher_rack, rango: true).add_helper(CRUDtree::Interface::Helper)
-  
+  require 'crudtree/interface/usher/rack'
+
   Usher::Interface.for(:rack) do
+    extend CRUDtree::Interface::Usher::Rack
     node(klass: Posts) do
       sub(type: :member, call: :show, rest: :get)
       sub(type: :collection, call: :index, rest: :get)
@@ -32,9 +33,12 @@ EndNode:: A route endpoint.
 
 === As Dev
 
-  CRUDtree::Interface.for(:usher_rack, rango: true)
+  require 'crudtree/interface/usher/rack'
+  require 'crudtree/helper'
   
   Usher::Interface.for(:rack) do
+    extend CRUDtree::Interface::Usher::Rack
+    extend CRUDtree::Interface::Helper
     resource(klass: Posts) do # the resource helper will include a bunch of default routes
       member(call: :show, rest: :get)
       collection(call: :index, rest: :get)
