@@ -11,7 +11,7 @@ module CRUDtree
           member(call: :update, rest: :put, path: "")
           member(call: :delete, rest: :get)
           member(call: :destroy, rest: :delete, path: "")
-          eval(&resource_block) if resource_block
+          instance_eval(&resource_block) if resource_block
         end
       end
     end
