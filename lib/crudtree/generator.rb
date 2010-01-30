@@ -8,14 +8,15 @@ module CRUDtree
 
     def generate(resource, *names)
       if resource.is_a? Symbol
-        names << resource
+        names.unshift(resource)
         node = @master
         url = ""
       else
         node, identifiers = find_node(resource)
+        last_identifier = identifiers.last
         url = generate_url_from_node(node, identifiers)
       end
-      url << generate_from_sub(node, names) unless names.empty?
+      generate_from_sub(node, names, url, last_identifier) unless names.empty?
       url
     end
 
@@ -71,12 +72,12 @@ module CRUDtree
       identifiers.reverse
     end
 
-    def generate_from_sub(node, names)
+    def generate_from_sub(node, names, url, last_identifier=nil)
       name = names.shift
       sub = node.subs.find{|sub| sub.name == name} or raise(ArgumentError, "No subnode found on #{node} with name of #{name}.")
-      url = "/#{sub.path}"
-      url << generate_from_sub(sub, names) unless names.empty?
-      url
+      url.chomp!("/#{last_identifier}") if last_identifier && sub.collection?
+      url << "/#{sub.path}"
+      generate_from_sub(sub, names, url) unless names.empty?
     end
   end
 

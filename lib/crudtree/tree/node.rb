@@ -111,6 +111,14 @@ module CRUDtree
       @paths.first
     end
 
+    def subs
+      endnodes
+    end
+
+    def collection?
+      false
+    end
+
     private
     def find_parent(node)
       if node.parent.respond_to? :parent

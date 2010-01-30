@@ -36,5 +36,9 @@ module CRUDtree
 
     attr_reader :type, :path, :rest, :call, :name, :parent
 
+    def collection?
+      type == :collection
+    end
+
   end
 end

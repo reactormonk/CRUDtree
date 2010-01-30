@@ -172,7 +172,9 @@ BareTest.suite do
         end
 
         assert "generates the correct url from :names" do
-          equal @path, Generator.allocate.send(:generate_from_sub, @node, @names)
+          url = ""
+          Generator.allocate.send(:generate_from_sub, @node, @names, url)
+          equal(@path, url)
         end
 
       end
@@ -182,8 +184,12 @@ BareTest.suite do
         setup do
           @master = Master.new
           @master.node(klass: Klass0, model: Mod0) do
+            collection(call: :new)
+            member(call: :delete)
             node(klass: Klass1, model: Mod1){:foo}
             node(klass: Klass2, model: Mod2) do
+              member(call: :edit)
+              collection(call: :post)
               node(klass: Klass2, model: Mod2){:foo}
             end
           end
@@ -205,8 +211,28 @@ BareTest.suite do
           @path = "/klass0/0"
         end
 
-        assert "#generate" do
-          equal(@path, @generator.generate(@resource))
+        setup :model, "collection on base node" do
+          @resource = [:klass0, :new]
+          @path = "/klass0/new"
+        end
+
+        setup :model, "member on base node" do
+          @resource = [:klass0, :delete]
+          @path = "/klass0/delete"
+        end
+
+        setup :model, "member on simple node" do
+          @resource = [Mod2.new, :edit]
+          @path = "/klass0/0/klass2/2/edit"
+        end
+
+        setup :model, "collection on simple node" do
+          @resource = [Mod2.new, :post]
+          @path = "/klass0/0/klass2/post"
+        end
+
+        assert "#generate with :model" do
+          equal(@path, @generator.generate(*@resource))
         end
 
       end
