@@ -25,7 +25,7 @@ EndNode:: A route endpoint.
 
   Usher::Interface.for(:rack) do
     extend CRUDtree::Interface::Usher::Rack
-    node(klass: Posts) do
+    node(klass: Posts, model: Post) do
       sub(type: :member, call: :show, rest: :get)
       sub(type: :collection, call: :index, rest: :get)
     end
@@ -39,7 +39,7 @@ EndNode:: A route endpoint.
   Usher::Interface.for(:rack) do
     extend CRUDtree::Interface::Usher::Rack
     extend CRUDtree::Interface::Helper
-    resource(klass: Posts) do # the resource helper will include a bunch of default routes
+    resource(klass: Posts, model: Post) do # the resource helper will include a bunch of default routes
       member(call: :show, rest: :get)
       collection(call: :index, rest: :get)
     end
