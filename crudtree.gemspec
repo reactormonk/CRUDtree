@@ -3,7 +3,7 @@
  
 Gem::Specification.new do |s|
   s.name = "crudtree"
-  s.version = "0.1.1"
+  s.version = "0.1.2"
   s.authors = ["Simon Hafner aka Tass"]
   s.homepage = "http://github.com/Tass/CRUDtree"
   s.summary = "A resource helper mainly for usher, but may be adapted for other routers as well."
