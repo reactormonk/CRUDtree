@@ -1,3 +1,5 @@
+require_relative "../../helper/suite/lib/integration"
+
 require 'crudtree/interface/usher/rack'
 module Usher
   module Interface

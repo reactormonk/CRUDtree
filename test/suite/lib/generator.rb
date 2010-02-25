@@ -1,3 +1,4 @@
+require_relative "../../helper/suite/lib/generator"
 require 'ostruct'
 BareTest.suite do
 
@@ -34,37 +35,37 @@ BareTest.suite do
       suite "#model_to_node" do
 
         setup do
-          class TestObj0; end
-          class TestObj1; end
+          class ::TestObj0; end
+          class ::TestObj1; end
         end
 
         setup :master, "a simple master" do
           master = CRUDtree::Master.new
-          master.node(klass: Object, model: ::TestObj0) {:foo}
+          master.node(klass: Object, model: TestObj0) {:foo}
           @generator = CRUDtree::Generator.new(master)
           @node = master.nodes.first
-          @model = ::TestObj0
+          @model = TestObj0
         end
 
         setup :master, "a complex master" do
           master = CRUDtree::Master.new
-          master.node(klass: Object, model: ::TestObj1){
-            node(klass: Object, model: ::TestObj0){:foo}
+          master.node(klass: Object, model: TestObj1){
+            node(klass: Object, model: TestObj0){:foo}
           }
           @generator = CRUDtree::Generator.new(master)
           @node = master.nodes.first.nodes.first
-          @model = ::TestObj0
+          @model = TestObj0
         end
 
         setup :master, "a master with duplicate models" do
           master = CRUDtree::Master.new
           master.node(klass: Object, model: TestObj1){
-            node(klass: Object, model: ::TestObj0){:foo}
-            node(klass: Object, model: ::TestObj0){:foo}
+            node(klass: Object, model: TestObj0){:foo}
+            node(klass: Object, model: TestObj0){:foo}
           }
           @generator = CRUDtree::Generator.new(master)
           @node = master.nodes.first.nodes
-          @model = ::TestObj0
+          @model = TestObj0
         end
 
         assert "The right model is found on :master." do

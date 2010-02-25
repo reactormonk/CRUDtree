@@ -1,3 +1,5 @@
+require_relative "../../../helper/suite/lib/interface/blackbox"
+
 BareTest.suite "CRUDtree" do
 
   suite "blackbox" do
