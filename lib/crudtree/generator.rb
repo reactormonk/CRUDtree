@@ -45,14 +45,22 @@ module CRUDtree
     end
 
     def add_node_models(node)
-      @model_to_node[node.model] = if target_node = @model_to_node[node.model]
-                                     ([target_node] << node).flatten
-                                   else
-                                     node
-                                   end
+      if node.model.respond_to? :each
+        node.model.each {|klass| register_klass(klass, node)}
+      else
+        register_klass(node.model, node)
+      end
       node.nodes.each { |subnode|
         add_node_models(subnode)
       }
+    end
+
+    def register_klass(klass, node)
+      @model_to_node[klass] = if target_node = @model_to_node[klass]
+                                ([target_node] << node).flatten
+                              else
+                                node
+                              end
     end
 
     def generate_url_from_node(node, identifiers)

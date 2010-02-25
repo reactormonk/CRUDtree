@@ -68,7 +68,15 @@ BareTest.suite do
           @model = TestObj0
         end
 
-        assert "The right model is found on :master." do
+        setup :master, "a master with more than one model" do
+          master = CRUDtree::Master.new
+          master.node(klass: Object, model: [TestObj0, TestObj1]) {:foo}
+          @generator = CRUDtree::Generator.new(master)
+          @node = master.nodes.first
+          @model = ::TestObj1
+        end
+
+        assert "The right node is found on :master." do
           equal(@node, @generator.instance_variable_get(:@model_to_node)[@model])
         end
 
