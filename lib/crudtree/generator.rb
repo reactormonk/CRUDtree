@@ -45,7 +45,7 @@ module CRUDtree
     end
 
     def add_node_models(node)
-      if node.model.respond_to? :each
+      if node.model.is_a? Array
         node.model.each {|klass| register_klass(klass, node)}
       else
         register_klass(node.model, node)
