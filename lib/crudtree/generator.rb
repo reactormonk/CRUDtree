@@ -1,3 +1,4 @@
+require 'rack/utils'
 module CRUDtree
   class Generator
     def initialize(master)
@@ -65,7 +66,7 @@ module CRUDtree
 
     def generate_url_from_node(node, identifiers)
       (node.parents.reverse + [node]).map {|parent|
-        "/#{parent.path}/#{identifiers.shift}"
+        "/#{parent.path}/#{Rack::Utils.escape(identifiers.shift)}"
       }.join
     end
 
@@ -83,7 +84,7 @@ module CRUDtree
     def generate_from_sub(node, names, url, last_identifier=nil)
       name = names.shift
       sub = node.subs.find{|sub| sub.name == name} or raise(ArgumentError, "No subnode found on #{node} with name of #{name}.")
-      url.chomp!("/#{last_identifier}") if last_identifier && sub.collection?
+      url.chomp!("/#{Rack::Utils.escape(last_identifier)}") if last_identifier && sub.collection?
       url << "/#{sub.path}"
       generate_from_sub(sub, names, url) unless names.empty?
     end

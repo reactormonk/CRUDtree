@@ -1,3 +1,4 @@
+# Encoding: UTF-8
 require_relative "../../helper/suite/lib/generator"
 require 'ostruct'
 BareTest.suite do
@@ -12,6 +13,12 @@ BareTest.suite do
           @node = Node.new(nil, :paths => ["foo"], klass: Object, model: Object ){:foo}
           @path = "/foo/23"
           @identifiers = [23]
+        end
+
+        setup :node, "a simple node with funky chars" do
+          @node = Node.new(nil, :paths => ["foo"], klass: Object, model: Object ){:foo}
+          @path = "/foo/%C4%A7"
+          @identifiers = ["ħ"]
         end
 
         setup :node, "a node with multiple parents" do
