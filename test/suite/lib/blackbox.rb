@@ -1,16 +1,14 @@
-require_relative "../../../helper/suite/lib/interface/blackbox"
-
 BareTest.suite "CRUDtree" do
 
-  suite "blackbox" do
+  suite "blackbox", :use => :rr do
 
     setup :tree, "a simple tree" do
       @block = proc {
         node(model: Object, klass: TestObj0) do
-          collection(call: :index, rest: :get)
+          collection(call: :foo, rest: :get)
         end
       }
-      results_in("/testobj0/index", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/testobj0/foo", TestObj0, :index, :conditions => {:request_method => "GET"})
       # default routes
       default_routes
     end

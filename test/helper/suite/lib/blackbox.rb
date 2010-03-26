@@ -1,8 +1,6 @@
 def results_in(path, klass, call, params)
-  klass.expects(:dispatcher).with(call).returns(:yeah!)
-  to_mock = mock('to')
-  to_mock.expects(:to).with(:yeah!).returns(true)
-  Usher::Interface.class_for(:rack).any_instance.expects(:path).with(path, params).returns(to_mock)
+  mock(klass).dispatcher(call) {:yeah!}
+  mock.instance_of(Usher::Interface.class_for(:rack)).path(path, params) {mock!.to(:yeah) {true} }
 end
 
 module Usher; module Interface; class Rack;
@@ -22,8 +20,8 @@ def default_routes(number=0)
 end
 
 def default_route(klass, pre_path=nil)
-  results_in("#{pre_path}/#{klass.to_s.downcase}", klass, :index, :conditions => {:request_method => "GET"})
-  results_in("#{pre_path}/#{klass.to_s.downcase}/:id", klass, :show, :conditions => {:request_method => "GET"})
+  results_in("#{pre_path}/#{klass.to_s.snake_case}", klass, :index, :conditions => {:request_method => "GET"})
+  results_in("#{pre_path}/#{klass.to_s.snake_case}/:id", klass, :show, :conditions => {:request_method => "GET"})
 end
 module Usher
   module Interface
