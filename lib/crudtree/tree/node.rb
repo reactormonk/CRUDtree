@@ -61,11 +61,11 @@ module CRUDtree
       @parent_call =  if params[:parent_call]
                         params[:parent_call]
                       elsif ! parent_is_master?
-                        parent.model.to_s.split('::').last.downcase
+                        parent.model.to_s.split('::').last.snake_case
                       else
                         nil
                       end
-      @name = params[:name] || klass.to_s.downcase.to_sym
+      @name = params[:name] || klass.to_s.snake_case.to_sym
       block ? instance_eval(&block) : raise(ArgumentError, "No block given.")
     end
 

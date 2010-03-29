@@ -25,5 +25,5 @@ Gem::Specification.new do |s|
   # === Dependencies ===
   # RubyGems has runtime dependencies (add_dependency) and
   # development dependencies (add_development_dependency)
- 
+  s.add_dependency "extlib"
 end
