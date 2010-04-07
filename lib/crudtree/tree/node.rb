@@ -4,7 +4,7 @@ module CRUDtree
     #
     # :klass
     # The object where to send the method that is returned by the router.
-    # Mostly a class, therefore it's called 'class_name'. Defaults to nil,
+    # Mostly a class, therefore it's called 'klass'. Defaults to nil,
     # but the interface may complain. You have been warned ;).
     # May be used by the interface as needed (Rango wants Class.send
     # :dispatcher, :send_method)
@@ -21,7 +21,7 @@ module CRUDtree
     #
     # :paths
     # Specify the path(s) you want to call this resource with.
-    # Defaults to klass.to_s.downcase
+    # Defaults to klass.to_s.snake_case
     # The first one is used for generation.
     #
     # Options used for generating
@@ -31,11 +31,11 @@ module CRUDtree
     #
     # :parent_call
     # The method to call on the model object to get its parent (for nested
-    # resources). Defaults to :model.downcase of the parent.
+    # resources). Defaults to :model.snake_case of the parent.
     #
     # :name
     # Symbol used to identify the node when generating a collection route.
-    # Defaults to Klass.to_s.downcase.to_sym
+    # Defaults to Klass.to_s.snake_case.to_sym
     #
     def initialize(parent, params, &block)
       @klass = params[:klass]
@@ -45,15 +45,15 @@ module CRUDtree
       @paths = if params[:paths]
                  [params[:paths]].flatten
                elsif params[:klass]
-                 [params[:klass].to_s.downcase.split("::").last]
+                 [params[:klass].to_s.snake_case.split("::").last]
                else
                 raise ArgumentError, "No paths given"
                end
       @subnodes = []
       @parent = parent
       # default routes
-      @subnodes.unshift(EndNode.new(self, type: :member, call: :show, path: "", rest: :get))
-      @subnodes.unshift(EndNode.new(self, type: :collection, call: :index, path: "", rest: :get))
+      @subnodes.unshift(EndNode.new(self, type: :member, call: @default_member, path: "", rest: :get)) if @default_member
+      @subnodes.unshift(EndNode.new(self, type: :collection, call: @default_collection, path: "", rest: :get)) if @default_collection
       # generating
       unless @model = params[:model]
         raise(ArgumentError, "No model given.")

@@ -1,6 +1,18 @@
+require_relative '../../helper/suite/lib/blackbox'
 BareTest.suite "CRUDtree" do
 
   suite "blackbox", :use => :rr do
+
+    setup do
+      @interface = Usher::Interface::Rack.new
+    end
+
+    setup :tree, "an extremely simple tree" do
+      @block = proc {
+        node(model: Object, klass: TestObj0) { }
+      }
+      default_routes
+    end
 
     setup :tree, "a simple tree" do
       @block = proc {
@@ -8,7 +20,7 @@ BareTest.suite "CRUDtree" do
           collection(call: :foo, rest: :get)
         end
       }
-      results_in("/testobj0/foo", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/test_obj0/foo", TestObj0, :foo, :conditions => {:request_method => "GET"})
       # default routes
       default_routes
     end
@@ -21,7 +33,7 @@ BareTest.suite "CRUDtree" do
           end
         end
       }
-      results_in("/testobj0/:id/testobj1/:id/show", TestObj1, :show, :conditions => {:request_method => "GET"})
+      results_in("/test_obj0/:id/test_obj1/:id/show", TestObj1, :show, :conditions => {:request_method => "GET"})
       # default routes
       default_routes(1)
      end
@@ -36,7 +48,7 @@ BareTest.suite "CRUDtree" do
           end
         end
       }
-      results_in("/testobj0/:id/testobj1/:id/testobj2/create", TestObj2, :create, :conditions => {:request_method => "POST"})
+      results_in("/test_obj0/:id/test_obj1/:id/test_obj2/create", TestObj2, :create, :conditions => {:request_method => "POST"})
       # default routes
       default_routes(2)
      end
@@ -49,9 +61,9 @@ BareTest.suite "CRUDtree" do
           member(call: :update, path: "edit", rest: :put)
         end
       }
-      results_in("/testobj0/index", TestObj0, :index, :conditions => {:request_method => "GET"})
-      results_in("/testobj0/:id/edit", TestObj0, :update, :conditions => {:request_method => "PUT"})
-      results_in("/testobj0/:id/show", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/test_obj0/index", TestObj0, :index, :conditions => {:request_method => "GET"})
+      results_in("/test_obj0/:id/edit", TestObj0, :update, :conditions => {:request_method => "PUT"})
+      results_in("/test_obj0/:id/show", TestObj0, :show, :conditions => {:request_method => "GET"})
       # default routes
       default_routes
      end
@@ -67,10 +79,10 @@ BareTest.suite "CRUDtree" do
           end
         end
       }
-      results_in("/testobj0/:id/show", TestObj0, :show, :conditions => {:request_method => "GET"})
-      results_in("/testobj0/:id/testobj1/index", TestObj1, :index, :conditions => {:request_method => "GET"})
-      results_in("/testobj0/:id/testobj1/:id/show", TestObj1, :show, :conditions => {:request_method => "GET"})
-      results_in("/testobj0/:id/testobj1/:id/edit", TestObj1, :update, :conditions => {:request_method => "PUT"})
+      results_in("/test_obj0/:id/show", TestObj0, :show, :conditions => {:request_method => "GET"})
+      results_in("/test_obj0/:id/test_obj1/index", TestObj1, :index, :conditions => {:request_method => "GET"})
+      results_in("/test_obj0/:id/test_obj1/:id/show", TestObj1, :show, :conditions => {:request_method => "GET"})
+      results_in("/test_obj0/:id/test_obj1/:id/edit", TestObj1, :update, :conditions => {:request_method => "PUT"})
       # default routes
       default_routes(1)
      end
@@ -124,7 +136,7 @@ BareTest.suite "CRUDtree" do
      end
 
     assert "compilation of :tree" do
-      Usher::Interface.class_for(:rack).new(&@block)
+      @interface.instance_eval &@block
     end
 
   end

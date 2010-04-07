@@ -1,11 +1,11 @@
 def results_in(path, klass, call, params)
-  mock(klass).dispatcher(call) {:yeah!}
-  mock.instance_of(Usher::Interface.class_for(:rack)).path(path, params) {mock!.to(:yeah) {true} }
+  stub(klass).dispatcher(call) {:yeah!}
+  mock(@interface).path(path, params).mock!.to(:yeah!) {true}
 end
 
 module Usher; module Interface; class Rack;
   include CRUDtree::Interface::Usher::Rack
-  def initialize(app = nil, options = nil, &block) 
+  def initialize(app = nil, options = nil, &block)
     instance_eval(&block) if block
   end
 end; end; end
@@ -15,8 +15,8 @@ class TestObj2; end
 
 def default_routes(number=0)
   default_route(TestObj0)
-  default_route(TestObj1, "/testobj0/:id") if number > 0
-  default_route(TestObj2, "/testobj0/:id/testobj1/:id") if number > 1
+  default_route(TestObj1, "/test_obj0/:id") if number > 0
+  default_route(TestObj2, "/test_obj0/:id/test_obj1/:id") if number > 1
 end
 
 def default_route(klass, pre_path=nil)
